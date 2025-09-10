@@ -1,12 +1,13 @@
-import os, sys
-from PyQt5.QtWidgets import QApplication
+import os
 
 import orangecanvas.resources as resources
 
 from syned_gui.error_profile.abstract_dabam_height_profile import OWAbstractDabamHeightProfile
 
-from oasys.util.oasys_objects import OasysPreProcessorData, OasysErrorProfileData, OasysSurfaceData
-import oasys.util.oasys_util as OU
+from orangewidget.widget import Output
+from oasys2.widget.util.widget_objects import OasysPreProcessorData, OasysErrorProfileData, OasysSurfaceData
+import oasys2.widget.util.widget_util as OU
+from oasys2.canvas.util.oasys_util import add_parameter_to_module
 
 class OWdabam_height_profile(OWAbstractDabamHeightProfile):
     name = "DABAM Height Profile"
@@ -19,11 +20,12 @@ class OWdabam_height_profile(OWAbstractDabamHeightProfile):
     category = ""
     keywords = ["dabam_height_profile"]
 
-    outputs = [OWAbstractDabamHeightProfile.get_dabam_output(),
-               {"name": "PreProcessor_Data",
-                "type": OasysPreProcessorData,
-                "doc": "PreProcessor Data",
-                "id": "PreProcessor_Data"}]
+    class Outputs:
+        dabam_output      = OWAbstractDabamHeightProfile.Outputs.dabam_output
+        preprocessor_data = Output(name="PreProcessor_Data",
+                                   type=OasysPreProcessorData,
+                                   id="PreProcessor_Data",
+                                   default=True, auto_summary=False)
 
     usage_path = os.path.join(resources.package_dirname("orangecontrib.syned.widgets.tools"), "misc", "dabam_height_profile_usage.png")
 
@@ -40,19 +42,11 @@ class OWdabam_height_profile(OWAbstractDabamHeightProfile):
         OU.write_surface_file(self.zz, self.xx, self.yy, self.heigth_profile_file_name)
 
     def send_data(self, dimension_x, dimension_y):
-        self.send("PreProcessor_Data", OasysPreProcessorData(error_profile_data=OasysErrorProfileData(surface_data=OasysSurfaceData(xx=self.xx,
+        self.Outputs.preprocessor_data.send(OasysPreProcessorData(error_profile_data=OasysErrorProfileData(surface_data=OasysSurfaceData(xx=self.xx,
                                                                                                                                     yy=self.yy,
                                                                                                                                     zz=self.zz,
                                                                                                                                     surface_data_file=self.heigth_profile_file_name),
                                                                                                       error_profile_x_dim=dimension_x,
                                                                                                       error_profile_y_dim=dimension_y)))
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    w = OWdabam_height_profile()
-    w.workspace_units_label = "m"
-    w.si_to_user_units = 100
-
-    w.show()
-    app.exec()
-    w.saveSettings()
+add_parameter_to_module(__name__, OWdabam_height_profile)

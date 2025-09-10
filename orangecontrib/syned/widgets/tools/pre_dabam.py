@@ -593,21 +593,21 @@ class OWpre_dabam(OWWidget):
 
         self.plot_canvas[0] = oasysgui.plotWindow(roi=False, control=False, position=True)
         self.plot_canvas[0].setDefaultPlotLines(True)
-        self.plot_canvas[0].setActiveCurveColor(color='blue')
+        self.plot_canvas[0].setActiveCurveStyle(color='blue')
         self.plot_canvas[0].setGraphYLabel("Z [nm]")
         self.plot_canvas[0].setGraphTitle("Heights Profile")
         self.plot_canvas[0].setInteractiveMode(mode='zoom')
 
         self.plot_canvas[1] = oasysgui.plotWindow(roi=False, control=False, position=True)
         self.plot_canvas[1].setDefaultPlotLines(True)
-        self.plot_canvas[1].setActiveCurveColor(color='blue')
+        self.plot_canvas[1].setActiveCurveStyle(color='blue')
         self.plot_canvas[1].setGraphYLabel("Zp [$\mu$rad]")
         self.plot_canvas[1].setGraphTitle("Slopes Profile")
         self.plot_canvas[1].setInteractiveMode(mode='zoom')
 
         self.plot_canvas[2] = oasysgui.plotWindow(roi=False, control=False, position=True)
         self.plot_canvas[2].setDefaultPlotLines(True)
-        self.plot_canvas[2].setActiveCurveColor(color='blue')
+        self.plot_canvas[2].setActiveCurveStyle(color='blue')
         self.plot_canvas[2].setGraphXLabel("f [m^-1]")
         self.plot_canvas[2].setGraphYLabel("PSD [m^3]")
         self.plot_canvas[2].setGraphTitle("Power Spectral Density of Heights Profile")
@@ -617,7 +617,7 @@ class OWpre_dabam(OWWidget):
 
         self.plot_canvas[3] = oasysgui.plotWindow(roi=False, control=False, position=True)
         self.plot_canvas[3].setDefaultPlotLines(True)
-        self.plot_canvas[3].setActiveCurveColor(color='blue')
+        self.plot_canvas[3].setActiveCurveStyle(color='blue')
         self.plot_canvas[3].setGraphXLabel("f [m^-1]")
         self.plot_canvas[3].setGraphYLabel("CSD [m^3]")
         self.plot_canvas[3].setGraphTitle("Cumulative Spectral Density of Heights Profile")
@@ -626,7 +626,7 @@ class OWpre_dabam(OWWidget):
 
         self.plot_canvas[4] = oasysgui.plotWindow(roi=False, control=False, position=True)
         self.plot_canvas[4].setDefaultPlotLines(True)
-        self.plot_canvas[4].setActiveCurveColor(color='blue')
+        self.plot_canvas[4].setActiveCurveStyle(color='blue')
         self.plot_canvas[4].setGraphXLabel("Length [m]")
         self.plot_canvas[4].setGraphYLabel("ACF")
         self.plot_canvas[4].setGraphTitle("Autocovariance Function of Heights Profile")

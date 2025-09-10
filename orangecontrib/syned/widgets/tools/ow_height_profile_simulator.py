@@ -1,15 +1,13 @@
-import os, sys
-
-import numpy
-
-from PyQt5.QtWidgets import QApplication
+import os, numpy
 
 import orangecanvas.resources as resources
 
 from syned_gui.error_profile.abstract_height_profile_simulator import OWAbstractHeightErrorProfileSimulator
 
-from oasys.util.oasys_objects import OasysPreProcessorData, OasysErrorProfileData, OasysSurfaceData
-import oasys.util.oasys_util as OU
+from orangewidget.widget import Output
+from oasys2.widget.util.widget_objects import OasysPreProcessorData, OasysErrorProfileData, OasysSurfaceData
+import oasys2.widget.util.widget_util as OU
+from oasys2.canvas.util.oasys_util import add_parameter_to_module
 
 class OWHeightProfileSimulator(OWAbstractHeightErrorProfileSimulator):
     name = "Height Profile Simulator"
@@ -22,15 +20,15 @@ class OWHeightProfileSimulator(OWAbstractHeightErrorProfileSimulator):
     category = ""
     keywords = ["height_profile_simulator"]
 
-    outputs = [{"name": "PreProcessor_Data",
-                "type": OasysPreProcessorData,
-                "doc": "PreProcessor Data",
-                "id": "PreProcessor_Data"},
-               {"name": "DABAM 1D Profile",
-                "type": numpy.ndarray,
-                "doc": "DABAM 1D Profile",
-                "id": "DABAM 1D Profile"}
-               ]
+    class Outputs:
+        preprocessor_data = Output(name="PreProcessor_Data",
+                                   type=OasysPreProcessorData,
+                                   id="PreProcessor_Data",
+                                   default=True, auto_summary=False)
+        dabam_output = Output(name="DABAM 1D Profile",
+                              type=numpy.ndarray,
+                              id="DABAM 1D Profile",
+                              default=True, auto_summary=False)
 
     usage_path = os.path.join(resources.package_dirname("orangecontrib.syned.widgets.tools"), "misc", "height_error_profile_usage.png")
 
@@ -47,26 +45,20 @@ class OWHeightProfileSimulator(OWAbstractHeightErrorProfileSimulator):
         OU.write_surface_file(self.zz, self.xx, self.yy, self.heigth_profile_file_name)
 
     def send_data(self, dimension_x, dimension_y):
-        self.send("PreProcessor_Data", OasysPreProcessorData(error_profile_data=OasysErrorProfileData(surface_data=OasysSurfaceData(xx=self.xx,
-                                                                                                                                    yy=self.yy,
-                                                                                                                                    zz=self.zz,
-                                                                                                                                    surface_data_file=self.heigth_profile_file_name),
-                                                                                                      error_profile_x_dim=dimension_x,
-                                                                                                      error_profile_y_dim=dimension_y)))
+        self.Outputs.preprocessor_data.send(OasysPreProcessorData(error_profile_data=OasysErrorProfileData(surface_data=OasysSurfaceData(xx=self.xx,
+                                                                                                           yy=self.yy,
+                                                                                                           zz=self.zz,
+                                                                                                           surface_data_file=self.heigth_profile_file_name),
+                                                                                 error_profile_x_dim=dimension_x,
+                                                                                 error_profile_y_dim=dimension_y)))
         self.send_1Dprofile()
 
     def send_1Dprofile(self):
-
         if self.yy is None: raise Exception("No Profile Selected")
         profile1D = numpy.zeros((self.yy.size, 2))
         profile1D[:, 0] = self.yy
         profile1D[:, 1] = self.zz[: , self.zz.shape[1] // 2]
-        self.send("DABAM 1D Profile", profile1D)
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    w = OWHeightProfileSimulator()
-    w.si_to_user_units = 1.0
-    w.show()
-    app.exec()
-    w.saveSettings()
+        self.Outputs.dabam_output.send(profile1D)
+
+add_parameter_to_module(__name__, OWHeightProfileSimulator)

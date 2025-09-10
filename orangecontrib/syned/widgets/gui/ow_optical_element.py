@@ -25,11 +25,7 @@ class OWOpticalElement(OWWidget, WidgetDecorator, openclass=True):
     category = "Syned Optical Elements"
 
     class Inputs:
-        __syned_input_data__ = WidgetDecorator.syned_input_data()
-
-        syned_data = Input(name=__syned_input_data__[0][0],
-                           type=__syned_input_data__[0][1],
-                           id=__syned_input_data__[0][0], default=True, auto_summary=False)
+        syned_data = WidgetDecorator.syned_input_data()
 
     class Outputs:
         syned_data = Output(name="SynedData",
