@@ -9,7 +9,7 @@ Widgets for association rules.
 
 # Category description for the widget registry
 
-NAME = "Syned Light Sources"
+NAME = "Syned \u23F5 Light Sources"
 
 DESCRIPTION = "Widgets for Syned"
 

@@ -9,7 +9,7 @@ Widgets for association rules.
 
 # Category description for the widget registry
 
-NAME = "Syned Scanning Loops"
+NAME = "Syned \u23F5 Scanning Loops"
 
 DESCRIPTION = "Widgets for Syned"
 
