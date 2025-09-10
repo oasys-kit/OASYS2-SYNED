@@ -7,7 +7,7 @@ from syned_gui.error_profile.abstract_dabam_height_profile import OWAbstractDaba
 from orangewidget.widget import Output
 from oasys2.widget.util.widget_objects import OasysPreProcessorData, OasysErrorProfileData, OasysSurfaceData
 import oasys2.widget.util.widget_util as OU
-from oasys2.canvas.util.oasys_util import add_parameter_to_module
+from oasys2.canvas.util.canvas_util import add_parameter_to_module
 
 class OWdabam_height_profile(OWAbstractDabamHeightProfile):
     name = "DABAM Height Profile"

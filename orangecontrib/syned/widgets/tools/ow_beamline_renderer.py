@@ -48,7 +48,7 @@
 import numpy
 
 from orangewidget.widget import Input
-from oasys2.canvas.util.oasys_util import add_parameter_to_module
+from oasys2.canvas.util.canvas_util import add_parameter_to_module
 
 from syned.beamline.beamline import Beamline
 
@@ -79,7 +79,10 @@ class BeamlineRenderer(AbstractBeamlineRenderer):
     keywords = ["data", "file", "load", "read"]
 
     class Inputs:
-        input_beamline = Input(name="SynedData", type=Beamline, id="SynedData", default=True, auto_summary=False)
+        input_beamline = Input(name="SynedData",
+                               type=Beamline,
+                               id="SynedData",
+                               default=True, auto_summary=False)
 
     syned_data = None
 

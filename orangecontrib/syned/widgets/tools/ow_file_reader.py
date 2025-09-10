@@ -1,15 +1,19 @@
 from PyQt5.QtWidgets import QMessageBox
 
-from orangewidget import gui,widget
+from orangewidget import gui
 from orangewidget.settings import Setting
-from oasys.widgets import gui as oasysgui, congruence
-from oasys.widgets import widget as oasyswidget
+from orangewidget.widget import Output
+
+from oasys2.widget import gui as oasysgui
+from oasys2.widget.util import congruence
+from oasys2.widget.widget import OWWidget, OWAction
+from oasys2.canvas.util.canvas_util import add_parameter_to_module
 
 from syned.storage_ring.light_source import LightSource
 from syned.beamline.beamline import Beamline
 from syned.util.json_tools import load_from_json_file, load_from_json_url
 
-class FileReader(oasyswidget.OWWidget):
+class FileReader(OWWidget):
     name = "Syned File Reader"
     description = "Utility: Syned File Reader"
     icon = "icons/file_reader.png"
@@ -23,16 +27,16 @@ class FileReader(oasyswidget.OWWidget):
 
     syned_file_name = Setting("")
 
-    outputs = [{"name":"SynedBeamline",
-                "type":Beamline,
-                "doc":"Syned Beamline",
-                "id":"data"}]
-
+    class Outputs:
+        syned_beamline = Output(name="SynedBeamline",
+                                type=Beamline,
+                                id="SynedBeamline",
+                                default=True, auto_summary=False)
 
     def __init__(self):
         super().__init__()
 
-        self.runaction = widget.OWAction("Read Syned File", self)
+        self.runaction = OWAction("Read Syned File", self)
         self.runaction.triggered.connect(self.read_file)
         self.addAction(self.runaction)
 
@@ -81,9 +85,9 @@ class FileReader(oasyswidget.OWWidget):
                 self.setStatusMessage("Read %s"%(self.syned_file_name))
 
                 if isinstance(content, Beamline):
-                    self.send("SynedBeamline", content)
+                    self.Outputs.syned_beamline.send(content)
                 elif isinstance(content, LightSource):
-                    self.send("SynedBeamline", Beamline(content))
+                    self.Outputs.syned_beamline.send(Beamline(content))
                 else:
                     raise Exception("json file must contain a SYNED LightSource")
             except Exception as e:
@@ -91,15 +95,5 @@ class FileReader(oasyswidget.OWWidget):
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e.args[0]), QMessageBox.Ok)
 
-if __name__ == "__main__":
-    from PyQt5.QtWidgets import QApplication
-    import sys
-
-    a = QApplication(sys.argv)
-    ow = FileReader()
-    # ow.syned_file_name = "http://ftp.esrf.eu/pub/scisoft/syned/lightsources/ESRF_ID02_EBS_PPU21.4_2.json"
-
-    ow.syned_file_name = "/home/manuel/Oasys/bl.json"
-    ow.show()
-    a.exec_()
+add_parameter_to_module(__name__, FileReader)
 

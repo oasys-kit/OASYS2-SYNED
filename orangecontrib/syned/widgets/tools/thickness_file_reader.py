@@ -10,13 +10,14 @@ from matplotlib.figure import Figure
 
 from orangewidget import gui
 from orangewidget.settings import Setting
+from orangewidget.widget import Output
 
-from oasys.widgets.widget import OWWidget
-from oasys.widgets import gui as oasysgui
-from oasys.widgets import congruence
-from oasys.util.oasys_objects import OasysThicknessErrorsData
-
-import oasys.util.oasys_util as OU
+from oasys2.widget.widget import OWWidget
+from oasys2.widget import gui as oasysgui
+from oasys2.widget.util import congruence
+from oasys2.widget.util.widget_objects import OasysThicknessErrorsData
+import oasys2.widget.util.widget_util as OU
+from oasys2.canvas.util.canvas_util import add_parameter_to_module
 
 try:
     from mpl_toolkits.mplot3d import Axes3D  # necessario per caricare i plot 3D
@@ -34,10 +35,11 @@ class OWThicknessFileReader(OWWidget):
     category = ""
     keywords = ["thickness_file_reader"]
 
-    outputs = [{"name":"Thickness Errors Data",
-                "type":OasysThicknessErrorsData,
-                "doc":"Thickness Errors Data",
-                "id":"Thickness Errors Data"}]
+    class Outputs:
+        output_data = Output(name="Thickness Errors Data",
+                             type=OasysThicknessErrorsData,
+                             id="Thickness Errors Data",
+                             default=True, auto_summary=False)
 
     want_main_area = 1
     want_control_area = 1
@@ -208,7 +210,7 @@ class OWThicknessFileReader(OWWidget):
 
             self.write_thickness_files(thickness_error_profile_data_files, index, xx, yy, zz)
 
-        self.send("Thickness Errors Data", OasysThicknessErrorsData(thickness_error_profile_data_files=thickness_error_profile_data_files))
+        self.Outputs.output_data.send(OasysThicknessErrorsData(thickness_error_profile_data_files=thickness_error_profile_data_files))
 
     def read_surface(self):
         try:
@@ -223,7 +225,7 @@ class OWThicknessFileReader(OWWidget):
 
                 self.write_thickness_files(thickness_error_profile_data_files, index, xx, yy, zz)
 
-            self.send("Thickness Errors Data", OasysThicknessErrorsData(thickness_error_profile_data_files=thickness_error_profile_data_files))
+            self.Outputs.output_data.send(OasysThicknessErrorsData(thickness_error_profile_data_files=thickness_error_profile_data_files))
 
         except Exception as exception:
             QMessageBox.critical(self, "Error",
@@ -291,3 +293,5 @@ class OWThicknessFileReader(OWWidget):
             self.data.append([xx, yy, zz])
 
         self.initialize_figures()
+
+add_parameter_to_module(__name__, OWThicknessFileReader)

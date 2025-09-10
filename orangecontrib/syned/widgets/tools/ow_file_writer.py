@@ -2,13 +2,18 @@ import os
 
 from PyQt5.QtWidgets import QMessageBox
 
-from orangewidget import gui, widget
+from orangewidget import gui
 from orangewidget.settings import Setting
-from oasys.widgets import gui as oasysgui, congruence
+from orangewidget.widget import Input, Output
+
+from oasys2.widget import gui as oasysgui
+from oasys2.widget.util import congruence
+from oasys2.widget.widget import OWWidget, OWAction
+from oasys2.canvas.util.canvas_util import add_parameter_to_module
 
 from syned.beamline.beamline import Beamline
 
-class FileWriter(widget.OWWidget):
+class FileWriter(OWWidget):
     name = "Syned File Writer"
     description = "Utility: Syned File Writer"
     icon = "icons/file_writer.png"
@@ -23,19 +28,22 @@ class FileWriter(widget.OWWidget):
     syned_file_name = Setting("")
     is_automatic_run= Setting(1)
 
-    inputs = [("SynedBeamline" , Beamline, "setBeamline" )]
 
-    outputs = [{"name":"SynedBeamline",
-                "type":Beamline,
-                "doc":"Syned Beamline",
-                "id":"data"}]
+    class Inputs:
+        input_beamline = Input(name="SynedBeamline", type=Beamline, id="SynedBeamline", default=True, auto_summary=False)
+
+    class Outputs:
+        syned_beamline = Output(name="SynedBeamline",
+                                type=Beamline,
+                                id="SynedBeamline",
+                                default=True, auto_summary=False)
 
     beamline = None
 
     def __init__(self):
         super().__init__()
 
-        self.runaction = widget.OWAction("Write Syned File", self)
+        self.runaction = OWAction("Write Syned File", self)
         self.runaction.triggered.connect(self.write_file)
         self.addAction(self.runaction)
 
@@ -67,6 +75,7 @@ class FileWriter(widget.OWWidget):
     def selectFile(self):
         self.le_syned_file_name.setText(oasysgui.selectFileFromDialog(self, self.syned_file_name, "Open Syned File"))
 
+    @Inputs.input_beamline
     def setBeamline(self, data):
         if not data is None:
             self.beamline = data
@@ -87,7 +96,7 @@ class FileWriter(widget.OWWidget):
 
                 self.setStatusMessage("File Out: " + file_name)
 
-                self.send("SynedBeamline", self.beamline)
+                self.Outputs.syned_beamline.send(self.beamline)
             else:
                 QMessageBox.critical(self, "Error",
                                      "Syned Data not present",
@@ -95,13 +104,4 @@ class FileWriter(widget.OWWidget):
         except Exception as exception:
             QMessageBox.critical(self, "Error", str(exception), QMessageBox.Ok)
 
-
-if __name__ == "__main__":
-    from PyQt5.QtWidgets import QApplication
-    import sys
-
-    a = QApplication(sys.argv)
-    ow = FileWriter()
-
-    ow.show()
-    a.exec_()
+add_parameter_to_module(__name__, FileWriter)

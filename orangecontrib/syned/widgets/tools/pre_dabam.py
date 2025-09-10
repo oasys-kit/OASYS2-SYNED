@@ -2,19 +2,18 @@ import os, sys
 import numpy
 
 from PyQt5.QtCore import QRect, Qt
-from PyQt5.QtWidgets import QApplication, QMessageBox, QScrollArea, QTableWidget, QTableWidgetItem, QHeaderView, QAbstractItemView, QWidget, QLabel, QSizePolicy
-from PyQt5.QtGui import QTextCursor,QFont, QPalette, QColor, QPainter, QBrush, QPen, QPixmap
-
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
-from matplotlib.figure import Figure
+from PyQt5.QtWidgets import QApplication, QMessageBox, QLabel, QSizePolicy
+from PyQt5.QtGui import QPixmap
 
 import orangecanvas.resources as resources
 
-from orangewidget import gui, widget
+from orangewidget import gui
 from orangewidget.settings import Setting
+from orangewidget.widget import Input, Output
 
-from oasys.widgets.widget import OWWidget
-from oasys.widgets import gui as oasysgui
+from oasys2.widget.widget import OWWidget
+from oasys2.widget import gui as oasysgui
+from oasys2.canvas.util.canvas_util import add_parameter_to_module
 
 from srxraylib.metrology.dabam import dabam, autocorrelationfunction
 
@@ -37,7 +36,17 @@ class OWpre_dabam(OWWidget):
          "doc": "DABAM 1D Profile",
          "id": "DABAM 1D Profile"}]
 
-    inputs=[("DABAM 1D Profile", numpy.ndarray, "receive_dabam_profile")]
+    class Inputs:
+        dabam_input = Input(name="DABAM 1D Profile",
+                               type=numpy.ndarray,
+                               id="DABAM 1D Profile",
+                               default=True, auto_summary=False)
+
+    class Outputs:
+        dabam_output = Output(name="DABAM 1D Profile",
+                              type=numpy.ndarray,
+                              id="DABAM 1D Profile",
+                              default=True, auto_summary=False)
 
     want_main_area = 1
     want_control_area = 1
@@ -337,7 +346,7 @@ class OWpre_dabam(OWWidget):
         self.USER_REFERENCE = ""
         self.USER_ADDED_BY = ""
 
-
+    @Inputs.dabam_input
     def receive_dabam_profile(self, dabam_profile):
         if not dabam_profile is None:
             try:
@@ -517,7 +526,7 @@ class OWpre_dabam(OWWidget):
             dabam_profile[:, 0] = dabam_y
             dabam_profile[:, 1] = self.server.zHeights
 
-            self.send("DABAM 1D Profile", dabam_profile)
+            self.Outputs.dabam_output.send(dabam_profile)
         except Exception as exception:
             QMessageBox.critical(self, "Error",
                                  exception.args[0],
@@ -632,14 +641,6 @@ class OWpre_dabam(OWWidget):
         self.plot_canvas[4].setGraphTitle("Autocovariance Function of Heights Profile")
         self.plot_canvas[4].setInteractiveMode(mode='zoom')
 
-        # self.figure = Figure(figsize=(self.IMAGE_HEIGHT, self.IMAGE_HEIGHT)) # QUADRATA!
-        # self.figure.patch.set_facecolor('white')
-        #
-        # self.axis = self.figure.add_subplot(111, projection='3d')
-        # self.axis.set_zlabel("Z [nm]")
-        #
-        # self.plot_canvas[5] = FigureCanvasQTAgg(self.figure)
-
         self.profileInfo = oasysgui.textArea(height=self.IMAGE_HEIGHT-5, width=400)
 
         profile_box = oasysgui.widgetBox(self.tab[0], "", addSpace=True, orientation="horizontal", height = self.IMAGE_HEIGHT, width=410)
@@ -652,22 +653,5 @@ class OWpre_dabam(OWWidget):
 
     def check_fields(self):
         pass
-        # self.dimension_x = congruence.checkStrictlyPositiveNumber(self.dimension_x, "Dimension X")
-        # self.step_x = congruence.checkStrictlyPositiveNumber(self.step_x, "Step X")
-        #
-        # congruence.checkLessOrEqualThan(self.step_x, self.dimension_x/2, "Step Width", "Width/2")
-        #
-        # if self.modify_y == 1 or self.modify_y == 2:
-        #     self.new_length = congruence.checkStrictlyPositiveNumber(self.new_length, "New Length")
-        #
-        # if self.renormalize_y == 1:
-        #     self.rms_y = congruence.checkPositiveNumber(self.rms_y, "Rms Y")
-        #
-        # congruence.checkDir(self.heigth_profile_file_name)
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    w = OWpre_dabam()
-    w.show()
-    app.exec()
-    w.saveSettings()
+add_parameter_to_module(__name__, OWpre_dabam)

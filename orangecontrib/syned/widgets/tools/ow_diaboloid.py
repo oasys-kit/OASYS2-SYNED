@@ -13,14 +13,14 @@ import orangecanvas.resources as resources
 
 from orangewidget import gui
 from orangewidget.settings import Setting
+from orangewidget.widget import Output
 
-from oasys.widgets.widget import OWWidget
-from oasys.widgets import gui as oasysgui
-from oasys.widgets import congruence
-
-from oasys.util.oasys_objects import OasysSurfaceData
-from oasys.util.oasys_util import write_surface_file
-from oasys.util.oasys_util import EmittingStream
+from oasys2.widget.widget import OWWidget
+from oasys2.widget import gui as oasysgui
+from oasys2.widget.util import congruence
+from oasys2.widget.util.widget_objects import OasysSurfaceData
+from oasys2.widget.util.widget_util import write_surface_file, EmittingStream
+from oasys2.canvas.util.canvas_util import add_parameter_to_module
 
 from srxraylib.profiles.diaboloid.diaboloid_calculator import diaboloid_approximated_point_to_segment
 from srxraylib.profiles.diaboloid.diaboloid_calculator import diaboloid_approximated_segment_to_point
@@ -43,11 +43,11 @@ class OWDiaboloid(OWWidget):
     category = ""
     keywords = ["preprocessor", "surface", "diaboloid", "diabloid"]
 
-    outputs = [{"name": "Surface Data",
-                "type": OasysSurfaceData,
-                "doc": "Surface Data",
-                "id": "Surface Data"},
-               ]
+    class Outputs:
+        surface_data = Output(name="Surface Data",
+                              type=OasysSurfaceData,
+                              id="Surface Data",
+                              default=True, auto_summary=False)
 
     want_main_area = 1
     want_control_area = 1
@@ -316,7 +316,7 @@ class OWDiaboloid(OWWidget):
         write_surface_file(Z.T, x, y, self.filename_h5, overwrite=True)
         print("HDF5 file %s written to disk." % self.filename_h5)
 
-        self.send("Surface Data",
+        self.Outputs.surface_data.send(
                   OasysSurfaceData(xx=x,
                                    yy=y,
                                    zz=Z.T,
@@ -356,35 +356,4 @@ class OWDiaboloid(OWWidget):
 
         canvas_widget_id.layout().addWidget(tmp)
 
-
-
-if __name__ == "__main__":
-
-    app = QApplication(sys.argv)
-    w = OWDiaboloid()
-    w.show()
-    app.exec()
-    w.saveSettings()
-
-    # x = numpy.linspace(-10e-3, 10e-3, 101)
-    # y = numpy.linspace(-100e-3, 100e-3, 1001)
-    #
-    # Z, X, Y =  diaboloid_exact_point_to_segment(p=29.3,q=19.53,theta=4.5e-3,x=x,y=y,)
-    # Z0, X, Y = diaboloid_approximated_point_to_segment(p=29.3, q=19.53, theta=4.5e-3, x=x, y=y, detrend=1)
-    #
-    # from srxraylib.plot.gol import plot_image, plot
-    # plot_image((Z0) * 1e-6, x * 1e-3, y * 1e-3, xtitle="X/mm", ytitle="Y/mm", title="Z (approximated)/um", aspect="auto")
-    # plot_image((Z) * 1e-6, x * 1e-3, y * 1e-3, xtitle="X/mm", ytitle="Y/mm", title="Z (exact)/um", aspect="auto")
-    # plot_image((Z-Z0) * 1e-6, x * 1e-3, y * 1e-3, xtitle="X/mm", ytitle="Y/mm", title="Z (exact)-Z(approximated)/um", aspect="auto")
-    #
-    # ZZ0 = Z0[:, y.size//2]
-    # ZZ  = Z[:, y.size//2]
-    # plot(x, ZZ0 - ZZ0.min(),
-    #      x,  ZZ - ZZ.min(),
-    #      xtitle="X", ytitle="Z", legend=["Z (approximated)","Z (exact)"])
-    #
-    # ZZ0 = Z0[x.size//2, :]
-    # ZZ  = Z[x.size//2, :]
-    # plot(y,  ZZ0 - ZZ0.min(),
-    #      y,   ZZ - ZZ.min(),
-    #      xtitle="Y", ytitle="Z", legend=["Z (approximated)","Z (exact)"])
+add_parameter_to_module(__name__, OWDiaboloid)

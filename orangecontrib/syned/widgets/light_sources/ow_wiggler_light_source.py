@@ -1,6 +1,6 @@
 import sys
 
-from oasys2.canvas.util.oasys_util import add_parameter_to_module
+from oasys2.canvas.util.canvas_util import add_parameter_to_module
 
 from syned.storage_ring.magnetic_structures.wiggler import Wiggler
 from orangecontrib.syned.widgets.gui.ow_insertion_device import OWInsertionDevice
