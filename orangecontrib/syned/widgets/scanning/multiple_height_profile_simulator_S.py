@@ -48,14 +48,15 @@
 import os
 
 import orangecanvas.resources as resources
-
+from orangewidget.widget import Output
 try:
     from mpl_toolkits.mplot3d import Axes3D  # necessario per caricare i plot 3D
 except:
     pass
 
-from oasys.util.oasys_objects import OasysPreProcessorData, OasysErrorProfileData, OasysSurfaceData
-import oasys.util.oasys_util as OU
+from oasys2.widget.util.widget_objects import OasysPreProcessorData, OasysErrorProfileData, OasysSurfaceData
+import oasys2.widget.util.widget_util as OU
+from oasys2.canvas.util.oasys_util import add_parameter_to_module
 
 from syned_gui.error_profile.abstract_multiple_height_profile_simulator_S import OWAbstractMultipleHeightProfileSimulatorS
 
@@ -70,16 +71,15 @@ class OWMultipleHeightProfileSimulatorS(OWAbstractMultipleHeightProfileSimulator
     category = ""
     keywords = ["height_profile_simulator"]
 
-    outputs = [{"name": "PreProcessor_Data",
-                "type": OasysPreProcessorData,
-                "doc": "PreProcessor Data",
-                "id": "PreProcessor_Data"},
-               {"name":"Files",
-                "type":list,
-                "doc":"Files",
-                "id":"Files"}]
+    class Outputs:
+        preprocessor_data = Output(name="PreProcessor_Data",
+                                   type=OasysPreProcessorData,
+                                   id="PreProcessor_Data", default=True, auto_summary=False)
+        files = Output(name="Files",
+                       type=list,
+                       id="Files", default=True, auto_summary=False)
 
-    usage_path = os.path.join(resources.package_dirname("orangecontrib.shadow.widgets.gui"), "misc", "height_error_profile_usage.png")
+    usage_path = os.path.join(resources.package_dirname("orangecontrib.syned.widgets.gui"), "misc", "multiple_height_profile_simualtor_S.png")
 
     def __init__(self):
         super().__init__()
@@ -91,12 +91,13 @@ class OWMultipleHeightProfileSimulatorS(OWAbstractMultipleHeightProfileSimulator
         OU.write_surface_file(zz, xx, yy, outFile)
 
     def send_data(self, height_profile_file_names, dimension_x, dimension_y):
-        self.send("PreProcessor_Data", OasysPreProcessorData(error_profile_data=OasysErrorProfileData(surface_data=OasysSurfaceData(xx=self.xx,
-                                                                                                                                    yy=self.yy,
-                                                                                                                                    zz=self.zz,
-                                                                                                                                    surface_data_file=height_profile_file_names),
-                                                                                                      error_profile_x_dim=dimension_x,
-                                                                                                      error_profile_y_dim=dimension_y)))
+        self.Outputs.preprocessor_data.send(OasysPreProcessorData(error_profile_data=OasysErrorProfileData(surface_data=OasysSurfaceData(xx=self.xx,
+                                                                                                           yy=self.yy,
+                                                                                                           zz=self.zz,
+                                                                                                           surface_data_file=height_profile_file_names),
+                                                                  error_profile_x_dim=dimension_x,
+                                                                  error_profile_y_dim=dimension_y)))
 
+        self.Outputs.files.send(height_profile_file_names)
 
-        self.send("Files", height_profile_file_names)
+add_parameter_to_module(__name__, OWMultipleHeightProfileSimulatorS)

@@ -1,5 +1,3 @@
-import numpy
-
 from PyQt5.QtGui import QPalette, QColor, QFont
 from PyQt5.QtWidgets import QMessageBox, QApplication
 from PyQt5.QtCore import QRect
@@ -287,7 +285,7 @@ class OWOpticalElementWithSurfaceShape(OWOpticalElementWithBoundaryShape):
 
     # PARABOLOID
     parabola_parameter_surface = Setting(0.0)
-    at_infinty_surface = Setting(0.0)
+    at_infinty_surface = Setting(0)
 
     # TORUS
     min_radius_surface = Setting(0.0)

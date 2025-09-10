@@ -47,6 +47,9 @@
 
 import numpy
 
+from orangewidget.widget import Input
+from oasys2.canvas.util.oasys_util import add_parameter_to_module
+
 from syned.beamline.beamline import Beamline
 
 from syned.storage_ring.magnetic_structures.bending_magnet import BendingMagnet
@@ -75,20 +78,21 @@ class BeamlineRenderer(AbstractBeamlineRenderer):
     category = "Utility"
     keywords = ["data", "file", "load", "read"]
 
-    inputs = [("SynedData", Beamline, "set_input")]
+    class Inputs:
+        input_beamline = Input(name="SynedData", type=Beamline, id="SynedData", default=True, auto_summary=False)
 
     syned_data = None
 
     def __init__(self):
-        super(BeamlineRenderer, self).__init__(is_using_workspace_units=False)
+        super(BeamlineRenderer, self).__init__()
 
+    @Inputs.input_beamline
     def set_input(self, input_data):
         self.setStatusMessage("")
 
         if not input_data is None:
             self.syned_data = input_data
             self.render(on_receiving_input=True)
-
 
     def render_beamline(self):
         if not self.syned_data is None:
@@ -233,3 +237,4 @@ class BeamlineRenderer(AbstractBeamlineRenderer):
 
             return number_of_elements, centers, limits
 
+add_parameter_to_module(__name__, BeamlineRenderer)
