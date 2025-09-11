@@ -1,6 +1,6 @@
 import sys
 
-from oasys2.canvas.util.canvas_util import add_parameter_to_module
+from oasys2.canvas.util.canvas_util import add_widget_parameters_to_module
 
 from syned.storage_ring.magnetic_structures.wiggler import Wiggler
 from orangecontrib.syned.widgets.gui.ow_insertion_device import OWInsertionDevice
@@ -35,4 +35,4 @@ class OWWigglerLightSource(OWInsertionDevice):
         self.number_of_periods = magnetic_structure._number_of_periods
 
 
-add_parameter_to_module(__name__, OWWigglerLightSource)
+add_widget_parameters_to_module(__name__)

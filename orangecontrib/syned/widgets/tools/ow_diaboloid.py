@@ -20,7 +20,7 @@ from oasys2.widget import gui as oasysgui
 from oasys2.widget.util import congruence
 from oasys2.widget.util.widget_objects import OasysSurfaceData
 from oasys2.widget.util.widget_util import write_surface_file, EmittingStream
-from oasys2.canvas.util.canvas_util import add_parameter_to_module
+from oasys2.canvas.util.canvas_util import add_widget_parameters_to_module
 
 from srxraylib.profiles.diaboloid.diaboloid_calculator import diaboloid_approximated_point_to_segment
 from srxraylib.profiles.diaboloid.diaboloid_calculator import diaboloid_approximated_segment_to_point
@@ -356,4 +356,4 @@ class OWDiaboloid(OWWidget):
 
         canvas_widget_id.layout().addWidget(tmp)
 
-add_parameter_to_module(__name__, OWDiaboloid)
+add_widget_parameters_to_module(__name__)

@@ -1,4 +1,4 @@
-from oasys2.canvas.util.canvas_util import add_parameter_to_module
+from oasys2.canvas.util.canvas_util import add_widget_parameters_to_module
 
 from orangecontrib.syned.widgets.gui.ow_optical_element import OWOpticalElement
 
@@ -21,5 +21,5 @@ class OWScreen(OWOpticalElement):
         return Screen(name=self.oe_name)
 
 
-add_parameter_to_module(__name__, OWScreen)
+add_widget_parameters_to_module(__name__)
 

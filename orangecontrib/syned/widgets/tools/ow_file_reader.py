@@ -7,7 +7,7 @@ from orangewidget.widget import Output
 from oasys2.widget import gui as oasysgui
 from oasys2.widget.util import congruence
 from oasys2.widget.widget import OWWidget, OWAction
-from oasys2.canvas.util.canvas_util import add_parameter_to_module
+from oasys2.canvas.util.canvas_util import add_widget_parameters_to_module
 
 from syned.storage_ring.light_source import LightSource
 from syned.beamline.beamline import Beamline
@@ -95,5 +95,5 @@ class FileReader(OWWidget):
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e.args[0]), QMessageBox.Ok)
 
-add_parameter_to_module(__name__, FileReader)
+add_widget_parameters_to_module(__name__)
 

@@ -56,7 +56,7 @@ except:
 
 from oasys2.widget.util.widget_objects import OasysPreProcessorData, OasysErrorProfileData, OasysSurfaceData
 import oasys2.widget.util.widget_util as OU
-from oasys2.canvas.util.canvas_util import add_parameter_to_module
+from oasys2.canvas.util.canvas_util import add_widget_parameters_to_module
 
 from syned_gui.error_profile.abstract_multiple_height_profile_simulator_S import OWAbstractMultipleHeightProfileSimulatorS
 
@@ -100,4 +100,4 @@ class OWMultipleHeightProfileSimulatorS(OWAbstractMultipleHeightProfileSimulator
 
         self.Outputs.files.send(height_profile_file_names)
 
-add_parameter_to_module(__name__, OWMultipleHeightProfileSimulatorS)
+add_widget_parameters_to_module(__name__)

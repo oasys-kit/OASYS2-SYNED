@@ -48,7 +48,7 @@
 import numpy
 
 from orangewidget.widget import Input
-from oasys2.canvas.util.canvas_util import add_parameter_to_module
+from oasys2.canvas.util.canvas_util import add_widget_parameters_to_module
 
 from syned.beamline.beamline import Beamline
 
@@ -240,4 +240,4 @@ class BeamlineRenderer(AbstractBeamlineRenderer):
 
             return number_of_elements, centers, limits
 
-add_parameter_to_module(__name__, BeamlineRenderer)
+add_widget_parameters_to_module(__name__)

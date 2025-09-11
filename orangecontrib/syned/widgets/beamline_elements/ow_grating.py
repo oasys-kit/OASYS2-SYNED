@@ -4,7 +4,7 @@ from orangewidget import gui
 
 from oasys2.widget import gui as oasysgui
 from oasys2.widget.util import congruence
-from oasys2.canvas.util.canvas_util import add_parameter_to_module
+from oasys2.canvas.util.canvas_util import add_widget_parameters_to_module
 
 from orangecontrib.syned.widgets.gui.ow_optical_element import OWOpticalElementWithSurfaceShape
 from syned.beamline.optical_elements.gratings.grating import Grating, GratingVLS, GratingBlaze, GratingLamellar
@@ -176,5 +176,5 @@ class OWGrating(OWOpticalElementWithSurfaceShape):
 
         congruence.checkStrictlyPositiveNumber(self.ruling_at_center, "Ruling at Center")
 
-add_parameter_to_module(__name__, OWGrating)
+add_widget_parameters_to_module(__name__)
 

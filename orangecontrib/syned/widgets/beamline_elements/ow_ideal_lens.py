@@ -1,7 +1,7 @@
 from orangewidget.settings import Setting
 from oasys2.widget import gui as oasysgui
 from oasys2.widget.util import congruence
-from oasys2.canvas.util.canvas_util import add_parameter_to_module
+from oasys2.canvas.util.canvas_util import add_widget_parameters_to_module
 
 from orangecontrib.syned.widgets.gui.ow_optical_element import OWOpticalElement
 
@@ -40,4 +40,4 @@ class OWIdealLens(OWOpticalElement):
         congruence.checkStrictlyPositiveNumber(self.focal_y, "Vertical Focal Length")
 
 
-add_parameter_to_module(__name__, OWIdealLens)
+add_widget_parameters_to_module(__name__)

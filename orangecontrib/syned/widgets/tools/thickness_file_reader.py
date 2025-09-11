@@ -17,7 +17,7 @@ from oasys2.widget import gui as oasysgui
 from oasys2.widget.util import congruence
 from oasys2.widget.util.widget_objects import OasysThicknessErrorsData
 import oasys2.widget.util.widget_util as OU
-from oasys2.canvas.util.canvas_util import add_parameter_to_module
+from oasys2.canvas.util.canvas_util import add_widget_parameters_to_module
 
 try:
     from mpl_toolkits.mplot3d import Axes3D  # necessario per caricare i plot 3D
@@ -294,4 +294,4 @@ class OWThicknessFileReader(OWWidget):
 
         self.initialize_figures()
 
-add_parameter_to_module(__name__, OWThicknessFileReader)
+add_widget_parameters_to_module(__name__)

@@ -7,7 +7,7 @@ from syned_gui.error_profile.abstract_height_profile_simulator import OWAbstract
 from orangewidget.widget import Output
 from oasys2.widget.util.widget_objects import OasysPreProcessorData, OasysErrorProfileData, OasysSurfaceData
 import oasys2.widget.util.widget_util as OU
-from oasys2.canvas.util.canvas_util import add_parameter_to_module
+from oasys2.canvas.util.canvas_util import add_widget_parameters_to_module
 
 class OWHeightProfileSimulator(OWAbstractHeightErrorProfileSimulator):
     name = "Height Profile Simulator"
@@ -61,4 +61,4 @@ class OWHeightProfileSimulator(OWAbstractHeightErrorProfileSimulator):
 
         self.Outputs.dabam_output.send(profile1D)
 
-add_parameter_to_module(__name__, OWHeightProfileSimulator)
+add_widget_parameters_to_module(__name__)

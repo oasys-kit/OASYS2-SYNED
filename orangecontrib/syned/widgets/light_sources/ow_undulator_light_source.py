@@ -5,7 +5,7 @@ from orangewidget import gui
 from orangewidget.settings import Setting
 from oasys2.widget import gui as oasysgui
 from oasys2.widget.util import congruence
-from oasys2.canvas.util.canvas_util import add_parameter_to_module
+from oasys2.canvas.util.canvas_util import add_widget_parameters_to_module
 
 from syned.storage_ring.magnetic_structures.undulator import Undulator
 
@@ -208,4 +208,4 @@ Approximated coherent fraction at 1st harmonic:
         return 1e9*self.electron_energy_in_GeV / (codata.m_e *  codata.c**2 / codata.e)
 
 
-add_parameter_to_module(__name__, OWUndulatorLightSource)
+add_widget_parameters_to_module(__name__)
