@@ -9,7 +9,7 @@ Widgets for association rules.
 
 # Category description for the widget registry
 
-NAME = "Syned \u23F5 Utilities"
+NAME = "Syned \u23F5 Tools"
 
 DESCRIPTION = "Widgets for Syned"
 
