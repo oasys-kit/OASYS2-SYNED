@@ -22,9 +22,9 @@ class OWdabam_height_profile(OWAbstractDabamHeightProfile):
 
     class Outputs:
         dabam_output      = OWAbstractDabamHeightProfile.Outputs.dabam_output
-        preprocessor_data = Output(name="PreProcessor_Data",
+        preprocessor_data = Output(name="PreProcessor Data",
                                    type=OasysPreProcessorData,
-                                   id="PreProcessor_Data",
+                                   id="PreProcessor Data",
                                    default=True, auto_summary=False)
 
     usage_path = os.path.join(resources.package_dirname("orangecontrib.syned.widgets.tools"), "misc", "dabam_height_profile_usage.png")

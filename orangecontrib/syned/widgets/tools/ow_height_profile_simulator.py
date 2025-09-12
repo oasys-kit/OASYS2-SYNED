@@ -21,9 +21,9 @@ class OWHeightProfileSimulator(OWAbstractHeightErrorProfileSimulator):
     keywords = ["height_profile_simulator"]
 
     class Outputs:
-        preprocessor_data = Output(name="PreProcessor_Data",
+        preprocessor_data = Output(name="PreProcessor Data",
                                    type=OasysPreProcessorData,
-                                   id="PreProcessor_Data",
+                                   id="PreProcessor Data",
                                    default=True, auto_summary=False)
         dabam_output = Output(name="DABAM 1D Profile",
                               type=numpy.ndarray,
