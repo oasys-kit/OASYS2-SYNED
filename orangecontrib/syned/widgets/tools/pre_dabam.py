@@ -31,11 +31,6 @@ class OWpre_dabam(OWWidget):
     category = ""
     keywords = ["dabam_prepare_profile"]
 
-    outputs = [{"name": "DABAM 1D Profile",
-         "type": numpy.ndarray,
-         "doc": "DABAM 1D Profile",
-         "id": "DABAM 1D Profile"}]
-
     class Inputs:
         dabam_input = Input(name="DABAM 1D Profile",
                                type=numpy.ndarray,
