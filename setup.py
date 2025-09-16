@@ -20,19 +20,19 @@ URL = 'https://github.com/oasys-kit/OASYS2-SYNED'
 DOWNLOAD_URL = 'https://github.com/oasys-kit/OASYS2-SYNED'
 LICENSE = 'GPLv3'
 
-KEYWORDS = (
+KEYWORDS = [
     'simulator',
     'oasys2',
-)
+]
 
-CLASSIFIERS = (
+CLASSIFIERS = [
     'Development Status :: 4 - Beta',
     'Environment :: X11 Applications :: Qt',
     'Environment :: Console',
     'Environment :: Plugins',
     'Programming Language :: Python :: 3',
     'Intended Audience :: Science/Research',
-)
+]
 
 SETUP_REQUIRES = (
     'setuptools',
@@ -49,7 +49,7 @@ PACKAGE_DATA = {
     "orangecontrib.syned.widgets.sources":["icons/*.png", "icons/*.jpg"],
     "orangecontrib.syned.widgets.beamline_elements":["icons/*.png", "icons/*.jpg"],
     "orangecontrib.syned.widgets.tools":["icons/*.png", "icons/*.jpg", "misc/*.png"],
-    "orangecontrib.syned.widgets.scanning": ["icons/*.png", "icons/*.jpg", "misc/*.png"],
+    "orangecontrib.syned.widgets.loops": ["icons/*.png", "icons/*.jpg", "misc/*.png"],
 }
 
 NAMESPACE_PACAKGES = ["orangecontrib", "orangecontrib.syned", "orangecontrib.syned.widgets"]
@@ -60,7 +60,7 @@ ENTRY_POINTS = {
         "Syned: Light Sources = orangecontrib.syned.widgets.light_sources",
         "Syned: Optical Elements = orangecontrib.syned.widgets.beamline_elements",
         "Syned: Tools = orangecontrib.syned.widgets.tools",
-        "Syned: Scanning Loops = orangecontrib.syned.widgets.scanning",
+        "Syned: Loops = orangecontrib.syned.widgets.loops",
     ),
 }
 
