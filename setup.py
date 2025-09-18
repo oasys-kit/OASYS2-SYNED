@@ -52,8 +52,6 @@ PACKAGE_DATA = {
     "orangecontrib.syned.widgets.loops": ["icons/*.png", "icons/*.jpg", "misc/*.png"],
 }
 
-NAMESPACE_PACAKGES = ["orangecontrib", "orangecontrib.syned", "orangecontrib.syned.widgets"]
-
 ENTRY_POINTS = {
     'oasys2.addons' : ("syned = orangecontrib.syned", ),
     'oasys2.widgets' : (
@@ -82,7 +80,6 @@ if __name__ == '__main__':
           setup_requires = SETUP_REQUIRES,
           install_requires = INSTALL_REQUIRES,
           entry_points = ENTRY_POINTS,
-          namespace_packages=NAMESPACE_PACAKGES,
           include_package_data = True,
           zip_safe = False,
           )
