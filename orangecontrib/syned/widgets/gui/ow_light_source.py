@@ -27,6 +27,7 @@ class OWLightSource(OWWidget, openclass=True):
                             id="SynedData", default=True, auto_summary=False)
 
     syned_file_name = Setting("Select *.json file")
+    file_action     = Setting(0)
 
     source_name         = Setting("Undefined")
 
@@ -127,10 +128,10 @@ class OWLightSource(OWWidget, openclass=True):
 
         button_box = oasysgui.widgetBox(box_json, "", addSpace=False, orientation="horizontal")
 
-        button = gui.button(button_box, self, "Read Syned File", callback=self.read_syned_file)
-        button.setFixedHeight(25)
+        self.cb_file_action = gui.comboBox(button_box, self, "file_action", label="Action", labelWidth=70,
+                     items=["Read", "Write"], sendSelectedValue=False, orientation="horizontal")
 
-        button = gui.button(button_box, self, "Write Syned File", callback=self.write_syned_file)
+        button = gui.button(button_box, self, "Execute", callback=self.execute_syned_file)
         button.setFixedHeight(25)
 
 
@@ -278,12 +279,20 @@ class OWLightSource(OWWidget, openclass=True):
     def callResetSettings(self):
         if ConfirmDialog.confirmed(parent=self, message="Confirm Reset of the Fields?"):
             try:
-                self.resetSettings()
+                self._reset_settings()
             except:
                 pass
 
     def select_syned_file(self):
-        self.le_syned_file_name.setText(oasysgui.selectFileFromDialog(self, self.syned_file_name, "Open Syned File"))
+        if self.file_action == 0:   self.le_syned_file_name.setText(oasysgui.selectFileFromDialog(self, self.syned_file_name, "Open Syned File",
+                                                                                                  file_extension_filter="JSON files (*.json)"))
+        elif self.file_action == 1: self.le_syned_file_name.setText(oasysgui.selectSaveFileFromDialog(self, "Save Syned File",
+                                                                                                      default_file_name="light_source.json",
+                                                                                                      file_extension_filter="JSON files (*.json)"))
+
+    def execute_syned_file(self):
+        if self.file_action == 0: self.read_syned_file()
+        elif self.file_action == 1: self.write_syned_file()
 
     def read_syned_file(self):
         try:
