@@ -17,4 +17,4 @@ BACKGROUND = "#dec0a0"
 
 ICON = "icons/light_sources.png"
 
-PRIORITY = 5
+PRIORITY = 2.0
