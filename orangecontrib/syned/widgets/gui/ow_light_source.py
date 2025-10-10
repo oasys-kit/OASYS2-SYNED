@@ -47,18 +47,16 @@ class OWLightSource(OWWidget, openclass=True):
     electron_beam_divergence_h = Setting(0.0)
     electron_beam_size_v       = Setting(0.0)
     electron_beam_divergence_v = Setting(0.0)
-
-    electron_beam_emittance_h = Setting(0.0)
-    electron_beam_emittance_v = Setting(0.0)
-    electron_beam_beta_h = Setting(0.0)
-    electron_beam_beta_v = Setting(0.0)
-    electron_beam_alpha_h = Setting(0.0)
-    electron_beam_alpha_v = Setting(0.0)
-    electron_beam_eta_h = Setting(0.0)
-    electron_beam_eta_v = Setting(0.0)
-    electron_beam_etap_h = Setting(0.0)
-    electron_beam_etap_v = Setting(0.0)
-
+    electron_beam_emittance_h  = Setting(0.0)
+    electron_beam_emittance_v  = Setting(0.0)
+    electron_beam_beta_h       = Setting(0.0)
+    electron_beam_beta_v       = Setting(0.0)
+    electron_beam_alpha_h      = Setting(0.0)
+    electron_beam_alpha_v      = Setting(0.0)
+    electron_beam_eta_h        = Setting(0.0)
+    electron_beam_eta_v        = Setting(0.0)
+    electron_beam_etap_h       = Setting(0.0)
+    electron_beam_etap_v       = Setting(0.0)
 
     type_of_properties = Setting(0)
 
@@ -185,14 +183,10 @@ class OWLightSource(OWWidget, openclass=True):
 
         gui.rubber(self.controlArea)
 
-
     def set_TypeOfProperties(self):
         self.left_box_2_1.setVisible(self.type_of_properties == 0)
         self.left_box_2_2.setVisible(self.type_of_properties == 1)
         self.left_box_2_3.setVisible(self.type_of_properties == 2)
-
-
-
 
     def check_data(self):
         congruence.checkStrictlyPositiveNumber(self.electron_energy_in_GeV , "Energy")
@@ -221,19 +215,19 @@ class OWLightSource(OWWidget, openclass=True):
             congruence.checkNumber(self.electron_beam_etap_h, "Horizontal Beam Dispersion Eta'")
             congruence.checkNumber(self.electron_beam_etap_v, "Vertical Beam Dispersion Eta'")
 
+            def check_contraints(emittance, alpha, beta, eta, etap, direction):
+                ElectronBeam._set_twiss(energy_spread=self.electron_energy_spread,
+                                        emittance=emittance,
+                                        alpha=alpha,
+                                        beta=beta,
+                                        eta=eta,
+                                        etap=etap,
+                                        check_consistency=True,
+                                        direction=direction)
+            check_contraints(self.electron_beam_emittance_h, self.electron_beam_alpha_h, self.electron_beam_beta_h, self.electron_beam_eta_h, self.electron_beam_etap_h, "Horizontal")
+            check_contraints(self.electron_beam_emittance_v, self.electron_beam_alpha_v, self.electron_beam_beta_v, self.electron_beam_eta_v, self.electron_beam_etap_v, "Vertical")
+
         self.check_magnetic_structure()
-
-
-    def send_data(self):
-        try:
-            self.check_data()
-
-            self.Outputs.syned_data.send(Beamline(light_source=self.get_light_source()))
-        except Exception as e:
-            QMessageBox.critical(self, "Error", str(e.args[0]), QMessageBox.Ok)
-
-            self.setStatusMessage("")
-            self.progressBarFinished()
 
     def get_light_source(self):
         electron_beam = ElectronBeam(energy_in_GeV=self.electron_energy_in_GeV,
@@ -242,33 +236,34 @@ class OWLightSource(OWWidget, openclass=True):
                                      number_of_bunches=self.number_of_bunches)
 
         if self.type_of_properties == 0:
-            electron_beam.set_moments_horizontal(self.moment_xx,self.moment_xxp,self.moment_xpxp)
-            electron_beam.set_moments_vertical(self.moment_yy, self.moment_yyp, self.moment_ypyp)
-
+            electron_beam.set_moments_all(moment_xx=self.moment_xx,
+                                          moment_xxp=self.moment_xxp,
+                                          moment_xpxp=self.moment_xpxp,
+                                          moment_yy=self.moment_yy,
+                                          moment_yyp=self.moment_yyp,
+                                          moment_ypyp=self.moment_ypyp)
         elif self.type_of_properties == 1:
             electron_beam.set_sigmas_all(sigma_x=self.electron_beam_size_h,
                                          sigma_y=self.electron_beam_size_v,
                                          sigma_xp=self.electron_beam_divergence_h,
                                          sigma_yp=self.electron_beam_divergence_v)
-
         elif self.type_of_properties == 2:
-            electron_beam.set_twiss_horizontal(self.electron_beam_emittance_h,
-                                             self.electron_beam_alpha_h,
-                                             self.electron_beam_beta_h,
-                                             self.electron_beam_eta_h,
-                                             self.electron_beam_etap_h)
-            electron_beam.set_twiss_vertical(self.electron_beam_emittance_v,
-                                             self.electron_beam_alpha_v,
-                                             self.electron_beam_beta_v,
-                                             self.electron_beam_eta_v,
-                                             self.electron_beam_etap_v)
-
+            electron_beam.set_twiss_all(self.electron_beam_emittance_h,
+                                        self.electron_beam_alpha_h,
+                                        self.electron_beam_beta_h,
+                                        self.electron_beam_eta_h,
+                                        self.electron_beam_etap_h,
+                                        self.electron_beam_emittance_v,
+                                        self.electron_beam_alpha_v,
+                                        self.electron_beam_beta_v,
+                                        self.electron_beam_eta_v,
+                                        self.electron_beam_etap_v)
         elif self.type_of_properties == 3:
-            electron_beam.set_moments_all(0,0,0,0,0,0)
+            electron_beam.set_moments_all(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 
         return LightSource(name=self.source_name,
-                           electron_beam = electron_beam,
-                           magnetic_structure = self.get_magnetic_structure())
+                           electron_beam=electron_beam,
+                           magnetic_structure=self.get_magnetic_structure())
 
     def check_magnetic_structure(self):
         raise NotImplementedError("Shoudl be implemented in subclasses")
@@ -278,10 +273,88 @@ class OWLightSource(OWWidget, openclass=True):
 
     def callResetSettings(self):
         if ConfirmDialog.confirmed(parent=self, message="Confirm Reset of the Fields?"):
-            try:
-                self._reset_settings()
-            except:
-                pass
+            try:    self._reset_settings()
+            except: pass
+
+    def populate_fields(self, light_source):
+        electron_beam      = light_source._electron_beam
+        magnetic_structure = light_source._magnetic_structure
+
+        self.check_magnetic_structure_instance(magnetic_structure)
+
+        # from json file
+        self.source_name            = light_source._name
+        self.electron_energy_in_GeV = electron_beam._energy_in_GeV
+        self.electron_energy_spread = electron_beam._energy_spread
+        self.ring_current           = electron_beam._current
+        self.number_of_bunches      = electron_beam._number_of_bunches
+        self.moment_xx              = round(electron_beam._moment_xx,   16)
+        self.moment_xxp             = round(electron_beam._moment_xxp,  16)
+        self.moment_xpxp            = round(electron_beam._moment_xpxp, 16)
+        self.moment_yy              = round(electron_beam._moment_yy,   16)
+        self.moment_yyp             = round(electron_beam._moment_yyp,  16)
+        self.moment_ypyp            = round(electron_beam._moment_ypyp, 16)
+        self.electron_beam_eta_h    = electron_beam._dispersion_x
+        self.electron_beam_eta_v    = electron_beam._dispersion_y
+        self.electron_beam_etap_h   = electron_beam._dispersionp_x
+        self.electron_beam_etap_v   = electron_beam._dispersionp_y
+
+        # calculated parameters from second moments
+        x, xp, y, yp = electron_beam.get_sigmas_all()
+
+        self.electron_beam_size_h       = round(x, 10)
+        self.electron_beam_size_v       = round(y, 10)
+        self.electron_beam_divergence_h = round(xp, 10)
+        self.electron_beam_divergence_v = round(yp, 10)
+
+        ex, ax, bx, ey, ay, by = electron_beam.get_twiss_all()
+
+        self.electron_beam_emittance_h = round(ex, 16)
+        self.electron_beam_emittance_v = round(ey, 16)
+        self.electron_beam_alpha_h     = round(ax, 6)
+        self.electron_beam_alpha_v     = round(ay, 6)
+        self.electron_beam_beta_h      = round(bx, 6)
+        self.electron_beam_beta_v      = round(by, 6)
+
+        self.populate_magnetic_structure(magnetic_structure)
+
+    def check_magnetic_structure_instance(self, magnetic_structure):
+        raise NotImplementedError()
+
+    def populate_magnetic_structure(self, magnetic_structure):
+        raise NotImplementedError()
+
+    def check_twiss_change(self, light_source):
+        electron_beam: ElectronBeam = light_source._electron_beam
+
+        return self.electron_beam_eta_h != electron_beam._dispersion_x or \
+               self.electron_beam_eta_v != electron_beam._dispersion_y or \
+               self.electron_beam_etap_h != electron_beam._dispersionp_x or \
+               self.electron_beam_etap_v != electron_beam._dispersionp_y
+
+    # -----------------------------------------------------
+    # EXECUTION
+
+    def send_data(self):
+        try:
+            self.check_data()
+            light_source = self.get_light_source()
+
+            proceed = True
+            if self.type_of_properties in [0, 1] and self.check_twiss_change(light_source):
+                if not ConfirmDialog.confirmed(parent=self, message="This operation will set \u03B7, \u03B7' to zero and recompute the twiss parameters, proceed?"):
+                    proceed = False
+                    self.type_of_properties = 2
+                    self.set_TypeOfProperties()
+
+            if proceed:
+                self.populate_fields(light_source)  # apply modifications from the typo of properties
+                self.Outputs.syned_data.send(Beamline(light_source=light_source))
+        except Exception as e:
+            QMessageBox.critical(self, "Error", str(e.args[0]), QMessageBox.Ok)
+
+            self.setStatusMessage("")
+            self.progressBarFinished()
 
     def select_syned_file(self):
         if self.file_action == 0:   self.le_syned_file_name.setText(oasysgui.selectFileFromDialog(self, self.syned_file_name, "Open Syned File",
@@ -307,69 +380,37 @@ class OWLightSource(OWWidget, openclass=True):
                 is_remote = False
 
             try:
-                if is_remote:
-                    content = load_from_json_url(self.syned_file_name)
-                else:
-                    content = load_from_json_file(self.syned_file_name)
+                if is_remote: content = load_from_json_url(self.syned_file_name)
+                else:         content = load_from_json_file(self.syned_file_name)
 
-                if isinstance(content, LightSource):
-                    self.populate_fields(content)
-                elif isinstance(content, Beamline) and not content._light_source is None:
-                    self.populate_fields(content._light_source)
-                else:
-                    raise Exception("json file must contain a SYNED LightSource")
+                if isinstance(content, LightSource):                                      light_source = content
+                elif isinstance(content, Beamline) and not content._light_source is None: light_source = content._light_source
+                else:                                                                     raise Exception("json file must contain a SYNED LightSource")
+
+                self.populate_fields(light_source)
             except Exception as e:
                 raise Exception("Error reading SYNED LightSource from file: " + str(e))
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e.args[0]), QMessageBox.Ok)
 
-
-    def populate_fields(self, light_source):
-        electron_beam = light_source._electron_beam
-        magnetic_structure = light_source._magnetic_structure
-
-        self.check_magnetic_structure_instance(magnetic_structure)
-
-        self.source_name = light_source._name
-
-        self.electron_energy_in_GeV = electron_beam._energy_in_GeV
-        self.electron_energy_spread = electron_beam._energy_spread
-        self.ring_current = electron_beam._current
-        self.number_of_bunches = electron_beam._number_of_bunches
-
-        self.type_of_properties = 0
-
-        self.moment_xx   = electron_beam._moment_xx
-        self.moment_xxp  = electron_beam._moment_xxp
-        self.moment_xpxp = electron_beam._moment_xpxp
-        self.moment_yy   = electron_beam._moment_yy
-        self.moment_yyp  = electron_beam._moment_yyp
-        self.moment_ypyp = electron_beam._moment_ypyp
-
-        x, xp, y, yp = electron_beam.get_sigmas_all()
-
-        self.electron_beam_size_h = x
-        self.electron_beam_size_v = y
-        self.electron_beam_divergence_h = xp
-        self.electron_beam_divergence_v = yp
-
-        self.populate_magnetic_structure(magnetic_structure)
-
-        self.set_TypeOfProperties()
-
-    def check_magnetic_structure_instance(self, magnetic_structure):
-        raise NotImplementedError()
-
-    def populate_magnetic_structure(self, magnetic_structure):
-        raise NotImplementedError()
-
     def write_syned_file(self):
         try:
+            self.check_data()
             congruence.checkDir(self.syned_file_name)
+            light_source = self.get_light_source()
 
-            self.get_light_source().to_json(self.syned_file_name)
+            proceed = True
+            if self.type_of_properties in [0, 1] and self.check_twiss_change(light_source):
+                if not ConfirmDialog.confirmed(parent=self, message="This operation will set \u03B7, \u03B7' to zero and recompute the twiss parameters, proceed?"):
+                    proceed = False
+                    self.type_of_properties = 2
+                    self.set_TypeOfProperties()
 
-            QMessageBox.information(self, "File Read", "JSON file correctly written to disk", QMessageBox.Ok)
+            if proceed:
+                self.populate_fields(light_source)
+                light_source.to_json(self.syned_file_name)
+
+                QMessageBox.information(self, "File Read", "JSON file correctly written to disk", QMessageBox.Ok)
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e.args[0]), QMessageBox.Ok)
 
