@@ -50,9 +50,9 @@ class OWBMLightSource(OWLightSource):
             raise ValueError("Magnetic Structure is not a Bending Magnet")
 
     def populate_magnetic_structure(self, magnetic_structure):
-        self.radius = magnetic_structure._radius
+        self.radius         = magnetic_structure._radius
         self.magnetic_field = magnetic_structure._magnetic_field
-        self.length = magnetic_structure._length
+        self.length         = magnetic_structure._length
 
 
 add_widget_parameters_to_module(__name__)

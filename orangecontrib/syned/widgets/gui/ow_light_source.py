@@ -63,7 +63,7 @@ class OWLightSource(OWWidget, openclass=True):
     want_main_area=0
 
     MAX_WIDTH = 460
-    MAX_HEIGHT = 700
+    MAX_HEIGHT = 730
 
     TABS_AREA_HEIGHT = 625
     CONTROL_AREA_WIDTH = 450
@@ -132,7 +132,6 @@ class OWLightSource(OWWidget, openclass=True):
         button = gui.button(button_box, self, "Execute", callback=self.execute_syned_file)
         button.setFixedHeight(25)
 
-
         oasysgui.lineEdit(self.tab_sou, self, "source_name", "Light Source Name", labelWidth=260, valueType=str, orientation="horizontal")
 
         self.electron_beam_box = oasysgui.widgetBox(self.tab_sou, "Electron Beam/Machine Parameters", addSpace=False, orientation="vertical")
@@ -146,7 +145,7 @@ class OWLightSource(OWWidget, openclass=True):
                      callback=self.set_TypeOfProperties,
                      sendSelectedValue=False, orientation="horizontal")
 
-        self.left_box_2_1 = oasysgui.widgetBox(self.electron_beam_box, "", addSpace=False, orientation="vertical", height=150)
+        self.left_box_2_1 = oasysgui.widgetBox(self.electron_beam_box, "", addSpace=False, orientation="vertical", height=160)
 
         oasysgui.lineEdit(self.left_box_2_1, self, "moment_xx",   "<x x>   [m^2]", labelWidth=260, valueType=float, orientation="horizontal")
         oasysgui.lineEdit(self.left_box_2_1, self, "moment_xxp",  "<x x'>  [m.rad]", labelWidth=260, valueType=float, orientation="horizontal")
@@ -154,7 +153,6 @@ class OWLightSource(OWWidget, openclass=True):
         oasysgui.lineEdit(self.left_box_2_1, self, "moment_yy",   "<y y>   [m^2]", labelWidth=260, valueType=float, orientation="horizontal")
         oasysgui.lineEdit(self.left_box_2_1, self, "moment_yyp",  "<y y'>  [m.rad]", labelWidth=260, valueType=float, orientation="horizontal")
         oasysgui.lineEdit(self.left_box_2_1, self, "moment_ypyp", "<y' y'> [rad^2]", labelWidth=260, valueType=float, orientation="horizontal")
-
 
         self.left_box_2_2 = oasysgui.widgetBox(self.electron_beam_box, "", addSpace=False, orientation="vertical", height=150)
 
@@ -166,13 +164,12 @@ class OWLightSource(OWWidget, openclass=True):
         self.left_box_2_3 = oasysgui.widgetBox(self.electron_beam_box, "", addSpace=False, orientation="horizontal",height=150)
         self.left_box_2_3_l = oasysgui.widgetBox(self.left_box_2_3, "", addSpace=False, orientation="vertical")
         self.left_box_2_3_r = oasysgui.widgetBox(self.left_box_2_3, "", addSpace=False, orientation="vertical")
+
         oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_emittance_h", "\u03B5x [m.rad]",labelWidth=75, valueType=float, orientation="horizontal")
         oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_alpha_h",     "\u03B1x",        labelWidth=75, valueType=float, orientation="horizontal")
         oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_beta_h",      "\u03B2x [m]",    labelWidth=75, valueType=float, orientation="horizontal")
         oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_eta_h",       "\u03B7x",        labelWidth=75, valueType=float, orientation="horizontal")
         oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_etap_h",      "\u03B7'x",       labelWidth=75, valueType=float, orientation="horizontal")
-
-
         oasysgui.lineEdit(self.left_box_2_3_r, self, "electron_beam_emittance_v", "\u03B5y [m.rad]",labelWidth=75, valueType=float, orientation="horizontal")
         oasysgui.lineEdit(self.left_box_2_3_r, self, "electron_beam_alpha_v",     "\u03B1y",        labelWidth=75,valueType=float, orientation="horizontal")
         oasysgui.lineEdit(self.left_box_2_3_r, self, "electron_beam_beta_v",      "\u03B2y [m]",    labelWidth=75, valueType=float, orientation="horizontal")
@@ -215,18 +212,6 @@ class OWLightSource(OWWidget, openclass=True):
             congruence.checkNumber(self.electron_beam_etap_h, "Horizontal Beam Dispersion Eta'")
             congruence.checkNumber(self.electron_beam_etap_v, "Vertical Beam Dispersion Eta'")
 
-            def check_contraints(emittance, alpha, beta, eta, etap, direction):
-                ElectronBeam._set_twiss(energy_spread=self.electron_energy_spread,
-                                        emittance=emittance,
-                                        alpha=alpha,
-                                        beta=beta,
-                                        eta=eta,
-                                        etap=etap,
-                                        check_consistency=True,
-                                        direction=direction)
-            check_contraints(self.electron_beam_emittance_h, self.electron_beam_alpha_h, self.electron_beam_beta_h, self.electron_beam_eta_h, self.electron_beam_etap_h, "Horizontal")
-            check_contraints(self.electron_beam_emittance_v, self.electron_beam_alpha_v, self.electron_beam_beta_v, self.electron_beam_eta_v, self.electron_beam_etap_v, "Vertical")
-
         self.check_magnetic_structure()
 
     def get_light_source(self):
@@ -234,7 +219,6 @@ class OWLightSource(OWWidget, openclass=True):
                                      energy_spread=self.electron_energy_spread,
                                      current=self.ring_current,
                                      number_of_bunches=self.number_of_bunches)
-
         if self.type_of_properties == 0:
             electron_beam.set_moments_all(moment_xx=self.moment_xx,
                                           moment_xxp=self.moment_xxp,
@@ -251,13 +235,13 @@ class OWLightSource(OWWidget, openclass=True):
             electron_beam.set_twiss_all(self.electron_beam_emittance_h,
                                         self.electron_beam_alpha_h,
                                         self.electron_beam_beta_h,
-                                        self.electron_beam_eta_h,
-                                        self.electron_beam_etap_h,
                                         self.electron_beam_emittance_v,
                                         self.electron_beam_alpha_v,
-                                        self.electron_beam_beta_v,
-                                        self.electron_beam_eta_v,
-                                        self.electron_beam_etap_v)
+                                        self.electron_beam_beta_v)
+            electron_beam.set_dispersion_all(self.electron_beam_eta_h,
+                                             self.electron_beam_etap_h,
+                                             self.electron_beam_eta_v,
+                                             self.electron_beam_etap_v)
         elif self.type_of_properties == 3:
             electron_beam.set_moments_all(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 
@@ -288,33 +272,40 @@ class OWLightSource(OWWidget, openclass=True):
         self.electron_energy_spread = electron_beam._energy_spread
         self.ring_current           = electron_beam._current
         self.number_of_bunches      = electron_beam._number_of_bunches
-        self.moment_xx              = round(electron_beam._moment_xx,   16)
-        self.moment_xxp             = round(electron_beam._moment_xxp,  16)
-        self.moment_xpxp            = round(electron_beam._moment_xpxp, 16)
-        self.moment_yy              = round(electron_beam._moment_yy,   16)
-        self.moment_yyp             = round(electron_beam._moment_yyp,  16)
-        self.moment_ypyp            = round(electron_beam._moment_ypyp, 16)
-        self.electron_beam_eta_h    = electron_beam._dispersion_x
-        self.electron_beam_eta_v    = electron_beam._dispersion_y
-        self.electron_beam_etap_h   = electron_beam._dispersionp_x
-        self.electron_beam_etap_v   = electron_beam._dispersionp_y
+
+        moment_xx,\
+        moment_xxp,\
+        moment_xpxp,\
+        moment_yy,\
+        moment_yyp,\
+        moment_ypyp = electron_beam.get_moments_all()
+
+        self.moment_xx              = round(moment_xx,   16)
+        self.moment_xxp             = round(moment_xxp,  16)
+        self.moment_xpxp            = round(moment_xpxp, 16)
+        self.moment_yy              = round(moment_yy,   16)
+        self.moment_yyp             = round(moment_yyp,  16)
+        self.moment_ypyp            = round(moment_ypyp, 16)
 
         # calculated parameters from second moments
-        x, xp, y, yp = electron_beam.get_sigmas_all()
+        x, xp, y, yp                 = electron_beam.get_sigmas_all()
+        ex, ax, bx, ey, ay, by       = electron_beam.get_twiss_all()
+        eta_x, etap_x, eta_y, etap_y = electron_beam.get_dispersion_all()
 
         self.electron_beam_size_h       = round(x, 10)
         self.electron_beam_size_v       = round(y, 10)
         self.electron_beam_divergence_h = round(xp, 10)
         self.electron_beam_divergence_v = round(yp, 10)
-
-        ex, ax, bx, ey, ay, by = electron_beam.get_twiss_all()
-
-        self.electron_beam_emittance_h = round(ex, 16)
-        self.electron_beam_emittance_v = round(ey, 16)
-        self.electron_beam_alpha_h     = round(ax, 6)
-        self.electron_beam_alpha_v     = round(ay, 6)
-        self.electron_beam_beta_h      = round(bx, 6)
-        self.electron_beam_beta_v      = round(by, 6)
+        self.electron_beam_emittance_h  = round(ex, 16)
+        self.electron_beam_emittance_v  = round(ey, 16)
+        self.electron_beam_alpha_h      = round(ax, 6)
+        self.electron_beam_alpha_v      = round(ay, 6)
+        self.electron_beam_beta_h       = round(bx, 6)
+        self.electron_beam_beta_v       = round(by, 6)
+        self.electron_beam_eta_h        = round(eta_x, 8)
+        self.electron_beam_eta_v        = round(eta_y, 8)
+        self.electron_beam_etap_h       = round(etap_x, 8)
+        self.electron_beam_etap_v       = round(etap_y, 8)
 
         self.populate_magnetic_structure(magnetic_structure)
 
@@ -324,13 +315,11 @@ class OWLightSource(OWWidget, openclass=True):
     def populate_magnetic_structure(self, magnetic_structure):
         raise NotImplementedError()
 
-    def check_twiss_change(self, light_source):
-        electron_beam: ElectronBeam = light_source._electron_beam
-
-        return self.electron_beam_eta_h != electron_beam._dispersion_x or \
-               self.electron_beam_eta_v != electron_beam._dispersion_y or \
-               self.electron_beam_etap_h != electron_beam._dispersionp_x or \
-               self.electron_beam_etap_v != electron_beam._dispersionp_y
+    def check_dispersion_presence(self):
+        return self.electron_beam_eta_h != 0.0 or \
+               self.electron_beam_eta_v != 0.0 or \
+               self.electron_beam_etap_h != 0.0 or \
+               self.electron_beam_etap_v != 0.0
 
     # -----------------------------------------------------
     # EXECUTION
@@ -341,8 +330,8 @@ class OWLightSource(OWWidget, openclass=True):
             light_source = self.get_light_source()
 
             proceed = True
-            if self.type_of_properties in [0, 1] and self.check_twiss_change(light_source):
-                if not ConfirmDialog.confirmed(parent=self, message="This operation will set \u03B7, \u03B7' to zero and recompute the twiss parameters, proceed?"):
+            if self.type_of_properties in [0, 1] and self.check_dispersion_presence():
+                if not ConfirmDialog.confirmed(parent=self, message="Dispersion parameters \u03B7, \u03B7' will be reset to zero, proceed?"):
                     proceed = False
                     self.type_of_properties = 2
                     self.set_TypeOfProperties()
@@ -356,6 +345,8 @@ class OWLightSource(OWWidget, openclass=True):
             self.setStatusMessage("")
             self.progressBarFinished()
 
+            if self.IS_DEVELOP: raise e
+
     def select_syned_file(self):
         if self.file_action == 0:   self.le_syned_file_name.setText(oasysgui.selectFileFromDialog(self, self.syned_file_name, "Open Syned File",
                                                                                                   file_extension_filter="JSON files (*.json)"))
@@ -364,7 +355,7 @@ class OWLightSource(OWWidget, openclass=True):
                                                                                                       file_extension_filter="JSON files (*.json)"))
 
     def execute_syned_file(self):
-        if self.file_action == 0: self.read_syned_file()
+        if self.file_action == 0:   self.read_syned_file()
         elif self.file_action == 1: self.write_syned_file()
 
     def read_syned_file(self):
@@ -388,6 +379,10 @@ class OWLightSource(OWWidget, openclass=True):
                 else:                                                                     raise Exception("json file must contain a SYNED LightSource")
 
                 self.populate_fields(light_source)
+
+                if self.check_dispersion_presence():
+                    self.type_of_properties = 2
+                    self.set_TypeOfProperties()
             except Exception as e:
                 raise Exception("Error reading SYNED LightSource from file: " + str(e))
         except Exception as e:
@@ -400,12 +395,11 @@ class OWLightSource(OWWidget, openclass=True):
             light_source = self.get_light_source()
 
             proceed = True
-            if self.type_of_properties in [0, 1] and self.check_twiss_change(light_source):
-                if not ConfirmDialog.confirmed(parent=self, message="This operation will set \u03B7, \u03B7' to zero and recompute the twiss parameters, proceed?"):
+            if self.type_of_properties in [0, 1] and self.check_dispersion_presence(light_source):
+                if not ConfirmDialog.confirmed(parent=self, message="Dispersion parameters \u03B7, \u03B7' will be reset to zero, proceed?"):
                     proceed = False
                     self.type_of_properties = 2
                     self.set_TypeOfProperties()
-
             if proceed:
                 self.populate_fields(light_source)
                 light_source.to_json(self.syned_file_name)
