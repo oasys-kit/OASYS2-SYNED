@@ -63,9 +63,9 @@ class OWLightSource(OWWidget, openclass=True):
     want_main_area=0
 
     MAX_WIDTH = 460
-    MAX_HEIGHT = 730
+    MAX_HEIGHT = 760
 
-    TABS_AREA_HEIGHT = 625
+    TABS_AREA_HEIGHT = 655
     CONTROL_AREA_WIDTH = 450
 
     def __init__(self):
@@ -145,36 +145,44 @@ class OWLightSource(OWWidget, openclass=True):
                      callback=self.set_TypeOfProperties,
                      sendSelectedValue=False, orientation="horizontal")
 
-        self.left_box_2_1 = oasysgui.widgetBox(self.electron_beam_box, "", addSpace=False, orientation="vertical", height=160)
+        self.left_box_2_1 = oasysgui.widgetBox(self.electron_beam_box, "", addSpace=False, orientation="vertical", height=190)
 
-        oasysgui.lineEdit(self.left_box_2_1, self, "moment_xx",   "<x x>   [m^2]", labelWidth=260, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_1, self, "moment_xxp",  "<x x'>  [m.rad]", labelWidth=260, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_1, self, "moment_xpxp", "<x' x'> [rad^2]", labelWidth=260, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_1, self, "moment_yy",   "<y y>   [m^2]", labelWidth=260, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_1, self, "moment_yyp",  "<y y'>  [m.rad]", labelWidth=260, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_1, self, "moment_ypyp", "<y' y'> [rad^2]", labelWidth=260, valueType=float, orientation="horizontal")
+        oasysgui.lineEdit(self.left_box_2_1, self, "moment_xx",   "<x x>   [m^2]",   labelWidth=260, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_1, self, "moment_xxp",  "<x x'>  [m.rad]", labelWidth=260, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_1, self, "moment_xpxp", "<x' x'> [rad^2]", labelWidth=260, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_1, self, "moment_yy",   "<y y>   [m^2]",   labelWidth=260, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_1, self, "moment_yyp",  "<y y'>  [m.rad]", labelWidth=260, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_1, self, "moment_ypyp", "<y' y'> [rad^2]", labelWidth=260, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        gui.separator(self.left_box_2_1)
+        lbl = oasysgui.widgetLabel(self.left_box_2_1, "Note: 2nd Moments do not include dispersion")
+        lbl.setStyleSheet("color: darkblue; font-weight: bold;")
 
-        self.left_box_2_2 = oasysgui.widgetBox(self.electron_beam_box, "", addSpace=False, orientation="vertical", height=150)
+        self.left_box_2_2 = oasysgui.widgetBox(self.electron_beam_box, "", addSpace=False, orientation="vertical", height=190)
 
-        oasysgui.lineEdit(self.left_box_2_2, self, "electron_beam_size_h",       "Horizontal Beam Size \u03c3x [m]", labelWidth=260, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_2, self, "electron_beam_size_v",       "Vertical Beam Size \u03c3y [m]",  labelWidth=260, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_2, self, "electron_beam_divergence_h", "Horizontal Beam Divergence \u03c3'x [rad]", labelWidth=260, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_2, self, "electron_beam_divergence_v", "Vertical Beam Divergence \u03c3'y [rad]", labelWidth=260, valueType=float, orientation="horizontal")
+        oasysgui.lineEdit(self.left_box_2_2, self, "electron_beam_size_h",       "Horizontal Beam Size \u03c3x [m]",          labelWidth=260, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_2, self, "electron_beam_size_v",       "Vertical Beam Size \u03c3y [m]",            labelWidth=260, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_2, self, "electron_beam_divergence_h", "Horizontal Beam Divergence \u03c3'x [rad]", labelWidth=260, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_2, self, "electron_beam_divergence_v", "Vertical Beam Divergence \u03c3'y [rad]",   labelWidth=260, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        gui.separator(self.left_box_2_2)
+        lbl = oasysgui.widgetLabel(self.left_box_2_2, "Note: Size/Divergence do not include dispersion")
+        lbl.setStyleSheet("color: darkblue; font-weight: bold;")
 
-        self.left_box_2_3 = oasysgui.widgetBox(self.electron_beam_box, "", addSpace=False, orientation="horizontal",height=150)
+        self.left_box_2_3   = oasysgui.widgetBox(self.electron_beam_box, "", addSpace=False, orientation="horizontal",height=190)
         self.left_box_2_3_l = oasysgui.widgetBox(self.left_box_2_3, "", addSpace=False, orientation="vertical")
         self.left_box_2_3_r = oasysgui.widgetBox(self.left_box_2_3, "", addSpace=False, orientation="vertical")
 
-        oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_emittance_h", "\u03B5x [m.rad]",labelWidth=75, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_alpha_h",     "\u03B1x",        labelWidth=75, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_beta_h",      "\u03B2x [m]",    labelWidth=75, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_eta_h",       "\u03B7x",        labelWidth=75, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_etap_h",      "\u03B7'x",       labelWidth=75, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_3_r, self, "electron_beam_emittance_v", "\u03B5y [m.rad]",labelWidth=75, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_3_r, self, "electron_beam_alpha_v",     "\u03B1y",        labelWidth=75,valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_3_r, self, "electron_beam_beta_v",      "\u03B2y [m]",    labelWidth=75, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_3_r, self, "electron_beam_eta_v",       "\u03B7y",        labelWidth=75, valueType=float, orientation="horizontal")
-        oasysgui.lineEdit(self.left_box_2_3_r, self, "electron_beam_etap_v",      "\u03B7'y",       labelWidth=75, valueType=float, orientation="horizontal")
+        oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_emittance_h", "\u03B5x [m.rad]",labelWidth=75, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_alpha_h",     "\u03B1x",        labelWidth=75, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_beta_h",      "\u03B2x [m]",    labelWidth=75, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_eta_h",       "\u03B7x",        labelWidth=75, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_3_l, self, "electron_beam_etap_h",      "\u03B7'x",       labelWidth=75, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_3_r, self, "electron_beam_emittance_v", "\u03B5y [m.rad]",labelWidth=75, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_3_r, self, "electron_beam_alpha_v",     "\u03B1y",        labelWidth=75, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_3_r, self, "electron_beam_beta_v",      "\u03B2y [m]",    labelWidth=75, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_3_r, self, "electron_beam_eta_v",       "\u03B7y",        labelWidth=75, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+        oasysgui.lineEdit(self.left_box_2_3_r, self, "electron_beam_etap_v",      "\u03B7'y",       labelWidth=75, valueType=float, orientation="horizontal", callback=self._electron_beam_modified)
+
+        self.left_box_2_4   = oasysgui.widgetBox(self.electron_beam_box, "", addSpace=False, orientation="horizontal",height=190)
 
         self.set_TypeOfProperties()
 
@@ -184,22 +192,44 @@ class OWLightSource(OWWidget, openclass=True):
         self.left_box_2_1.setVisible(self.type_of_properties == 0)
         self.left_box_2_2.setVisible(self.type_of_properties == 1)
         self.left_box_2_3.setVisible(self.type_of_properties == 2)
+        self.left_box_2_4.setVisible(self.type_of_properties == 3)
+
+    def callResetSettings(self):
+        if ConfirmDialog.confirmed(parent=self, message="Confirm Reset of the Fields?"):
+            try:
+                self._reset_settings()
+            except:
+                pass
+
+    def _electron_beam_modified(self):
+        try:
+            self.check_electron_beam()
+            if self._check_dispersion_reset():
+                self.populate_electron_beam(self.get_electron_beam())
+        except Exception as e:
+            QMessageBox.critical(self, "Error", str(e.args[0]), QMessageBox.Ok)
+            if self.IS_DEVELOP: raise e
+
 
     def check_data(self):
-        congruence.checkStrictlyPositiveNumber(self.electron_energy_in_GeV , "Energy")
+        self.check_electron_beam()
+        self.check_magnetic_structure()
+
+    def check_electron_beam(self):
+        congruence.checkStrictlyPositiveNumber(self.electron_energy_in_GeV, "Energy")
         congruence.checkStrictlyPositiveNumber(self.electron_energy_spread, "Energy Spread")
         congruence.checkStrictlyPositiveNumber(self.ring_current, "Ring Current")
 
         if self.type_of_properties == 0:
-            congruence.checkPositiveNumber(self.moment_xx   , "Moment xx")
-            congruence.checkPositiveNumber(self.moment_xpxp , "Moment xpxp")
-            congruence.checkPositiveNumber(self.moment_yy   , "Moment yy")
-            congruence.checkPositiveNumber(self.moment_ypyp , "Moment ypyp")
+            congruence.checkPositiveNumber(self.moment_xx, "Moment xx")
+            congruence.checkPositiveNumber(self.moment_xpxp, "Moment xpxp")
+            congruence.checkPositiveNumber(self.moment_yy, "Moment yy")
+            congruence.checkPositiveNumber(self.moment_ypyp, "Moment ypyp")
         elif self.type_of_properties == 1:
-            congruence.checkPositiveNumber(self.electron_beam_size_h       , "Horizontal Beam Size")
-            congruence.checkPositiveNumber(self.electron_beam_divergence_h , "Vertical Beam Size")
-            congruence.checkPositiveNumber(self.electron_beam_size_v       , "Horizontal Beam Divergence")
-            congruence.checkPositiveNumber(self.electron_beam_divergence_v , "Vertical Beam Divergence")
+            congruence.checkPositiveNumber(self.electron_beam_size_h, "Horizontal Beam Size")
+            congruence.checkPositiveNumber(self.electron_beam_divergence_h, "Vertical Beam Size")
+            congruence.checkPositiveNumber(self.electron_beam_size_v, "Horizontal Beam Divergence")
+            congruence.checkPositiveNumber(self.electron_beam_divergence_v, "Vertical Beam Divergence")
         elif self.type_of_properties == 2:
             congruence.checkPositiveNumber(self.electron_beam_emittance_h, "Horizontal Beam Emittance")
             congruence.checkPositiveNumber(self.electron_beam_emittance_v, "Vertical Beam Emittance")
@@ -212,9 +242,7 @@ class OWLightSource(OWWidget, openclass=True):
             congruence.checkNumber(self.electron_beam_etap_h, "Horizontal Beam Dispersion Eta'")
             congruence.checkNumber(self.electron_beam_etap_v, "Vertical Beam Dispersion Eta'")
 
-        self.check_magnetic_structure()
-
-    def get_light_source(self):
+    def get_electron_beam(self):
         electron_beam = ElectronBeam(energy_in_GeV=self.electron_energy_in_GeV,
                                      energy_spread=self.electron_energy_spread,
                                      current=self.ring_current,
@@ -245,8 +273,11 @@ class OWLightSource(OWWidget, openclass=True):
         elif self.type_of_properties == 3:
             electron_beam.set_moments_all(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 
+        return electron_beam
+
+    def get_light_source(self):
         return LightSource(name=self.source_name,
-                           electron_beam=electron_beam,
+                           electron_beam=self.get_electron_beam(),
                            magnetic_structure=self.get_magnetic_structure())
 
     def check_magnetic_structure(self):
@@ -255,19 +286,13 @@ class OWLightSource(OWWidget, openclass=True):
     def get_magnetic_structure(self):
         raise NotImplementedError("Shoudl be implemented in subclasses")
 
-    def callResetSettings(self):
-        if ConfirmDialog.confirmed(parent=self, message="Confirm Reset of the Fields?"):
-            try:    self._reset_settings()
-            except: pass
-
     def populate_fields(self, light_source):
-        electron_beam      = light_source._electron_beam
-        magnetic_structure = light_source._magnetic_structure
+        self.source_name = light_source._name
 
-        self.check_magnetic_structure_instance(magnetic_structure)
+        self.populate_electron_beam(light_source._electron_beam)
+        self.populate_magnetic_structure(light_source._magnetic_structure)
 
-        # from json file
-        self.source_name            = light_source._name
+    def populate_electron_beam(self, electron_beam):
         self.electron_energy_in_GeV = electron_beam._energy_in_GeV
         self.electron_energy_spread = electron_beam._energy_spread
         self.ring_current           = electron_beam._current
@@ -307,15 +332,13 @@ class OWLightSource(OWWidget, openclass=True):
         self.electron_beam_etap_h       = round(etap_x, 8)
         self.electron_beam_etap_v       = round(etap_y, 8)
 
-        self.populate_magnetic_structure(magnetic_structure)
-
     def check_magnetic_structure_instance(self, magnetic_structure):
         raise NotImplementedError()
 
     def populate_magnetic_structure(self, magnetic_structure):
         raise NotImplementedError()
 
-    def check_dispersion_presence(self):
+    def _check_dispersion_presence(self):
         return self.electron_beam_eta_h != 0.0 or \
                self.electron_beam_eta_v != 0.0 or \
                self.electron_beam_etap_h != 0.0 or \
@@ -329,14 +352,7 @@ class OWLightSource(OWWidget, openclass=True):
             self.check_data()
             light_source = self.get_light_source()
 
-            proceed = True
-            if self.type_of_properties in [0, 1] and self.check_dispersion_presence():
-                if not ConfirmDialog.confirmed(parent=self, message="Dispersion parameters \u03B7, \u03B7' will be reset to zero, proceed?"):
-                    proceed = False
-                    self.type_of_properties = 2
-                    self.set_TypeOfProperties()
-
-            if proceed:
+            if self._check_dispersion_reset():
                 self.populate_fields(light_source)  # apply modifications from the typo of properties
                 self.Outputs.syned_data.send(Beamline(light_source=light_source))
         except Exception as e:
@@ -378,11 +394,11 @@ class OWLightSource(OWWidget, openclass=True):
                 elif isinstance(content, Beamline) and not content._light_source is None: light_source = content._light_source
                 else:                                                                     raise Exception("json file must contain a SYNED LightSource")
 
+                self.check_magnetic_structure_instance(light_source.get_magnetic_structure())
                 self.populate_fields(light_source)
 
-                if self.check_dispersion_presence():
-                    self.type_of_properties = 2
-                    self.set_TypeOfProperties()
+                self.type_of_properties = 2 if self._check_dispersion_presence() else 1
+                self.set_TypeOfProperties()
             except Exception as e:
                 raise Exception("Error reading SYNED LightSource from file: " + str(e))
         except Exception as e:
@@ -394,17 +410,20 @@ class OWLightSource(OWWidget, openclass=True):
             congruence.checkDir(self.syned_file_name)
             light_source = self.get_light_source()
 
-            proceed = True
-            if self.type_of_properties in [0, 1] and self.check_dispersion_presence(light_source):
-                if not ConfirmDialog.confirmed(parent=self, message="Dispersion parameters \u03B7, \u03B7' will be reset to zero, proceed?"):
-                    proceed = False
-                    self.type_of_properties = 2
-                    self.set_TypeOfProperties()
-            if proceed:
+            if self._check_dispersion_reset():
                 self.populate_fields(light_source)
                 light_source.to_json(self.syned_file_name)
 
                 QMessageBox.information(self, "File Read", "JSON file correctly written to disk", QMessageBox.Ok)
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e.args[0]), QMessageBox.Ok)
+
+    def _check_dispersion_reset(self):
+        proceed = True
+        if self.type_of_properties in [0, 1, 3] and self._check_dispersion_presence():
+            if not ConfirmDialog.confirmed(parent=self, message="Dispersion parameters \u03B7, \u03B7' will be reset to zero, proceed?"):
+                proceed = False
+                self.type_of_properties = 2
+                self.set_TypeOfProperties()
+        return proceed
 
