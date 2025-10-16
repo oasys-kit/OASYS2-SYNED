@@ -1,11 +1,10 @@
 import os, sys
 import numpy
 
-from PyQt5.QtCore import QRect, Qt
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QLabel, QSizePolicy
-from PyQt5.QtWidgets import QApplication
-from PyQt5 import QtGui
+from AnyQt.QtCore import QRect, Qt
+from AnyQt.QtGui import QPixmap, QTextCursor
+from AnyQt.QtWidgets import QLabel, QSizePolicy
+from AnyQt.QtWidgets import QApplication
 
 from silx.gui.plot import Plot2D
 
@@ -88,7 +87,7 @@ class OWDiaboloid(OWWidget):
     def __init__(self):
         super().__init__()
 
-        geom = QApplication.desktop().availableGeometry()
+        geom = QApplication.primaryScreen().geometry()
         self.setGeometry(QRect(round(geom.width() * 0.05),
                                round(geom.height() * 0.05),
                                round(min(geom.width() * 0.98, self.MAX_WIDTH)),
@@ -229,7 +228,7 @@ class OWDiaboloid(OWWidget):
         if initialize:
             self.profileInfo.setText(text)
         else:
-            cursor.movePosition(QtGui.QTextCursor.End)
+            cursor.movePosition(QTextCursor.End)
             cursor.insertText(text)
 
     def calculate(self):

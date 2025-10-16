@@ -1,8 +1,8 @@
 import os, sys
 
 import numpy, h5py
-from PyQt5.QtCore import QRect
-from PyQt5.QtWidgets import QApplication, QMessageBox, QFileDialog
+from AnyQt.QtCore import QRect
+from AnyQt.QtWidgets import QApplication, QMessageBox, QFileDialog
 
 from matplotlib import cm
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
@@ -66,7 +66,7 @@ class OWThicknessFileReader(OWWidget):
     def __init__(self):
         super().__init__()
 
-        geom = QApplication.desktop().availableGeometry()
+        geom = QApplication.primaryScreen().geometry()
         self.setGeometry(QRect(round(geom.width() * 0.05),
                                round(geom.height() * 0.05),
                                round(min(geom.width() * 0.98, self.MAX_WIDTH)),
