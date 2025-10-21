@@ -534,19 +534,19 @@ class OWpre_dabam(OWWidget):
             self.plot_canvas[0].setGraphTitle(
                 "Heights Profile. St.Dev.=%.3f nm" % (self.server.stdev_profile_heights() * 1e9))
             self.plot_canvas[1].setGraphTitle(
-                "Slopes Profile. St.Dev.=%.3f $\mu$rad" % (self.server.stdev_profile_slopes() * 1e6))
+                "Slopes Profile. St.Dev.=%.3f $\\mu$rad" % (self.server.stdev_profile_slopes() * 1e6))
             if self.detrending_option > 0: #use_undetrended == 0:
                 self.plot_dabam_graph(0, "heights_profile", self.si_to_user_units * self.server.y,
                                       1e9 * self.server.zHeights, "Y [m]", "Z [nm]")
                 self.plot_dabam_graph(1, "slopes_profile", self.si_to_user_units * self.server.y, 1e6 * self.server.zSlopes,
-                                      "Y [m]", "Zp [$\mu$rad]")
+                                      "Y [m]", "Zp [$\\mu$rad]")
             else:
                 self.plot_dabam_graph(0, "heights_profile", self.si_to_user_units * self.server.y,
                                       1e9 * self.server.zHeightsUndetrended, "Y [m]",
                                       "Z [nm]")
                 self.plot_dabam_graph(1, "slopes_profile", self.si_to_user_units * self.server.y,
                                       1e6 * self.server.zSlopesUndetrended, "Y [m]",
-                                      "Zp [$\mu$rad]")
+                                      "Zp [$\\mu$rad]")
             y = self.server.f ** (self.server.powerlaw["hgt_pendent"]) * 10 ** self.server.powerlaw["hgt_shift"]
             i0 = self.server.powerlaw["index_from"]
             i1 = self.server.powerlaw["index_to"]
@@ -605,7 +605,7 @@ class OWpre_dabam(OWWidget):
         self.plot_canvas[1] = oasysgui.plotWindow(roi=False, control=False, position=True)
         self.plot_canvas[1].setDefaultPlotLines(True)
         self.plot_canvas[1].setActiveCurveStyle(color='blue')
-        self.plot_canvas[1].setGraphYLabel("Zp [$\mu$rad]")
+        self.plot_canvas[1].setGraphYLabel("Zp [$\\mu$rad]")
         self.plot_canvas[1].setGraphTitle("Slopes Profile")
         self.plot_canvas[1].setInteractiveMode(mode='zoom')
 
