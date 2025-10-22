@@ -27,9 +27,7 @@ class OWOpticalElement(OWWidget, WidgetDecorator, openclass=True):
         syned_data = WidgetDecorator.syned_input_data()
 
     class Outputs:
-        syned_data = Output(name="SynedData",
-                            type=Beamline,
-                            id="SynedData", default=True, auto_summary=False)
+        syned_data = Output(name="Syned Data", type=Beamline, id="SynedData", default=True, auto_summary=False)
 
 
     beamline = None

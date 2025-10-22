@@ -21,9 +21,7 @@ class OWLightSource(OWWidget, openclass=True):
     keywords = ["data", "file", "load", "read"]
 
     class Outputs:
-        syned_data = Output(name="SynedData",
-                            type=Beamline,
-                            id="SynedData", default=True, auto_summary=False)
+        syned_data = Output(name="Syned Data", type=Beamline, id="SynedData", default=True, auto_summary=False)
 
     syned_file_name = Setting("Select *.json file")
     file_action     = Setting(0)

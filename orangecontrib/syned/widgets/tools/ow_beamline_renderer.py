@@ -79,10 +79,7 @@ class BeamlineRenderer(AbstractBeamlineRenderer):
     keywords = ["data", "file", "load", "read"]
 
     class Inputs:
-        input_beamline = Input(name="SynedData",
-                               type=Beamline,
-                               id="SynedData",
-                               default=True, auto_summary=False)
+        input_beamline = Input(name="Syned Data", type=Beamline, id="SynedData", default=True, auto_summary=False)
 
     syned_data = None
 
