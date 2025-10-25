@@ -6,7 +6,8 @@ from orangewidget.settings import Setting
 from oasys2.widget import gui as oasysgui
 from oasys2.widget.util import congruence
 from oasys2.canvas.util.canvas_util import add_widget_parameters_to_module
-from oasys2.widget.util.widget_util import ChemicalFormulaParser
+
+from srxraylib.util.chemical_formula import ChemicalFormulaParser
 
 from orangecontrib.syned.widgets.gui.ow_optical_element import OWOpticalElementWithSurfaceShape
 
