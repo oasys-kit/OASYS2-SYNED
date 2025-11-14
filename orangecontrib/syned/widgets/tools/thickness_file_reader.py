@@ -151,8 +151,7 @@ class OWThicknessFileReader(OWWidget):
 
     def select_files(self):
         files, _ = QFileDialog.getOpenFileNames(self,
-                                                "Select Thickness Error Profiles", "", "Data Files (*.txt *.dat *.hdf5 *.h5 *.hdf)",
-                                                options=QFileDialog.Options())
+                                                "Select Thickness Error Profiles", "", "Data Files (*.txt *.dat *.hdf5 *.h5 *.hdf)")
         if files:
             self.surface_file_names = files
 
