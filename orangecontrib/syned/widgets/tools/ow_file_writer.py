@@ -48,14 +48,14 @@ class FileWriter(OWWidget):
         self.addAction(self.runaction)
 
         self.setFixedWidth(590)
-        self.setFixedHeight(180)
+        self.setFixedHeight(200)
 
         left_box_1 = oasysgui.widgetBox(self.controlArea, "Syned File Selection", addSpace=True, orientation="vertical",
                                          width=570, height=100)
 
         gui.checkBox(left_box_1, self, 'is_automatic_run', 'Automatic Execution')
 
-        gui.separator(left_box_1, height=10)
+        gui.separator(left_box_1)
 
         figure_box = oasysgui.widgetBox(left_box_1, "", addSpace=True, orientation="horizontal", width=550, height=50)
 
@@ -65,7 +65,7 @@ class FileWriter(OWWidget):
 
         gui.button(figure_box, self, "...", callback=self.selectFile)
 
-        gui.separator(left_box_1, height=10)
+        gui.separator(left_box_1)
 
         button = gui.button(self.controlArea, self, "Write Syned File", callback=self.write_file)
         button.setFixedHeight(45)

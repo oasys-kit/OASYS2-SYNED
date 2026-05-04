@@ -41,12 +41,14 @@ class FileReader(OWWidget):
         self.addAction(self.runaction)
 
         self.setFixedWidth(590)
-        self.setFixedHeight(150)
+        self.setFixedHeight(170)
 
-        left_box_1 = oasysgui.widgetBox(self.controlArea, "Syned Local/Remote File Selection", addSpace=True,
-                                        orientation="vertical",width=570, height=60)
+        left_box_1 = oasysgui.widgetBox(self.controlArea, "Syned Local/Remote File Selection", addSpace=False,
+                                        orientation="vertical",width=570, height=70)
 
-        figure_box = oasysgui.widgetBox(left_box_1, "", addSpace=True, orientation="horizontal", width=550, height=50)
+        gui.separator(left_box_1)
+
+        figure_box = oasysgui.widgetBox(left_box_1, "", addSpace=False, orientation="horizontal", width=550, height=50)
 
         self.le_syned_file_name = oasysgui.lineEdit(figure_box, self, "syned_file_name", "Syned File Name or File URL",
                                                     labelWidth=190, valueType=str, orientation="horizontal")
