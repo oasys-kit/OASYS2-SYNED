@@ -5,7 +5,7 @@ from AnyQt.QtCore import QRect
 from AnyQt.QtWidgets import QApplication, QMessageBox, QFileDialog
 
 from matplotlib import cm
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 
 from orangewidget import gui
