@@ -1,3 +1,5 @@
+import warnings
+
 from AnyQt.QtWidgets import QMessageBox, QApplication
 from AnyQt.QtCore import QRect
 
@@ -189,7 +191,7 @@ class OWLightSource(OWWidget, openclass=True):
         try:
             self.check_electron_beam()
             if self._check_dispersion_reset():
-                self.populate_electron_beam(self.get_electron_beam())
+                self.populate_electron_beam(self.get_electron_beam(), online=True)
         except Exception as e:
             QMessageBox.critical(self, "Error", str(e.args[0]), QMessageBox.Ok)
             if self.IS_DEVELOP: raise e
@@ -276,7 +278,7 @@ class OWLightSource(OWWidget, openclass=True):
         self.populate_electron_beam(light_source._electron_beam)
         self.populate_magnetic_structure(light_source._magnetic_structure)
 
-    def populate_electron_beam(self, electron_beam):
+    def populate_electron_beam(self, electron_beam: ElectronBeam, online: bool = False):
         self.electron_energy_in_GeV = electron_beam._energy_in_GeV
         self.electron_energy_spread = electron_beam._energy_spread
         self.ring_current           = electron_beam._current
@@ -297,24 +299,31 @@ class OWLightSource(OWWidget, openclass=True):
         self.moment_ypyp            = round(moment_ypyp, 16)
 
         # calculated parameters from second moments
-        x, xp, y, yp                 = electron_beam.get_sigmas_all(dispersion=False)
-        ex, ax, bx, ey, ay, by       = electron_beam.get_twiss_all()
-        eta_x, etap_x, eta_y, etap_y = electron_beam.get_dispersion_all()
+        if not (online and self.type_of_properties == 1):
+            x, xp, y, yp                 = electron_beam.get_sigmas_all(dispersion=False)
 
-        self.electron_beam_size_h       = round(x, 10)
-        self.electron_beam_size_v       = round(y, 10)
-        self.electron_beam_divergence_h = round(xp, 10)
-        self.electron_beam_divergence_v = round(yp, 10)
-        self.electron_beam_emittance_h  = round(ex, 16)
-        self.electron_beam_emittance_v  = round(ey, 16)
-        self.electron_beam_alpha_h      = round(ax, 6)
-        self.electron_beam_alpha_v      = round(ay, 6)
-        self.electron_beam_beta_h       = round(bx, 6)
-        self.electron_beam_beta_v       = round(by, 6)
-        self.electron_beam_eta_h        = round(eta_x, 8)
-        self.electron_beam_eta_v        = round(eta_y, 8)
-        self.electron_beam_etap_h       = round(etap_x, 8)
-        self.electron_beam_etap_v       = round(etap_y, 8)
+            self.electron_beam_size_h       = round(x, 10)
+            self.electron_beam_size_v       = round(y, 10)
+            self.electron_beam_divergence_h = round(xp, 10)
+            self.electron_beam_divergence_v = round(yp, 10)
+
+        if not (online and self.type_of_properties == 2):
+            with warnings.catch_warnings(record=True) as captured_warnings:
+                ex, ax, bx, ey, ay, by       = electron_beam.get_twiss_all()
+                eta_x, etap_x, eta_y, etap_y = electron_beam.get_dispersion_all()
+
+                for w in captured_warnings:  raise ValueError(f"Wrong input parameters: {w.message}\nConsider choosing 'Zero emittance' Electron Beam Properties. ")
+
+                self.electron_beam_emittance_h  = round(ex, 16)
+                self.electron_beam_emittance_v  = round(ey, 16)
+                self.electron_beam_alpha_h      = round(ax, 6)
+                self.electron_beam_alpha_v      = round(ay, 6)
+                self.electron_beam_beta_h       = round(bx, 6)
+                self.electron_beam_beta_v       = round(by, 6)
+                self.electron_beam_eta_h        = round(eta_x, 8)
+                self.electron_beam_eta_v        = round(eta_y, 8)
+                self.electron_beam_etap_h       = round(etap_x, 8)
+                self.electron_beam_etap_v       = round(etap_y, 8)
 
     def check_magnetic_structure_instance(self, magnetic_structure):
         raise NotImplementedError()
